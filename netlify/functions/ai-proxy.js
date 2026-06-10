@@ -1,13 +1,10 @@
-exports.handler = async function(event) {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
+export async function onRequestPost(context) {
   try {
-    const { imageBase64, mediaType, prompt } = JSON.parse(event.body);
+    const { imageBase64, mediaType, prompt } = await context.request.json();
 
-    const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY;
+    const OPENROUTER_KEY = context.env.OPENROUTER_API_KEY;
     if (!OPENROUTER_KEY) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'API key not configured' }) };
+      return new Response(JSON.stringify({ error: 'API key not configured' }), { status: 500 });
     }
 
     const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -15,7 +12,7 @@ exports.handler = async function(event) {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${OPENROUTER_KEY}`,
-        'HTTP-Referer': 'https://my-econommy.netlify.app',
+        'HTTP-Referer': 'https://my-econommy.luciadepablosreina.workers.dev',
         'X-Title': 'My Econommy',
       },
       body: JSON.stringify({
@@ -32,17 +29,17 @@ exports.handler = async function(event) {
 
     if (!resp.ok) {
       const err = await resp.text();
-      return { statusCode: resp.status, body: JSON.stringify({ error: err }) };
+      return new Response(JSON.stringify({ error: err }), { status: resp.status });
     }
 
     const data = await resp.json();
     const text = data.choices?.[0]?.message?.content || '';
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text }),
-    };
+    return new Response(JSON.stringify({ text }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+
   } catch (e) {
-    return { statusCode: 500, body: JSON.stringify({ error: e.message }) };
+    return new Response(JSON.stringify({ error: e.message }), { status: 500 });
   }
-};
+}
