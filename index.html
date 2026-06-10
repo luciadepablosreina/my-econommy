@@ -854,7 +854,7 @@ Cada objeto debe tener exactamente estas claves:
 - titular: string (nombre del titular si se puede inferir, sino "")
 Ejemplo: [{"detalle":"MERPAGO*NETFLIX","pesos":15800,"usd":0,"cuota":"","titular":""},{"detalle":"APPLE.COM/BILL","pesos":0,"usd":2.99,"cuota":"","titular":""}]`;
 
-    const resp=await fetch('/.netlify/functions/ai-proxy',{
+    const resp=await fetch('/netlify/functions/ai-proxy',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ imageBase64:base64, mediaType:f.type, prompt:aiPrompt }),
