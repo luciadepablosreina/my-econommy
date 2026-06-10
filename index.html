@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis Tarjetas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0ebe3;--bg2:#e8e0d4;--white:#faf7f2;--border:#cfc4b4;
+  --text:#3d3028;--muted:#8a7a6a;--accent:#4a2c14;--accent2:#6b4530;
+  --accent-l:#e8ddd0;--warm1:#c4845a;--warm2:#8b6d4a;--warm3:#6b7a5a;
+  --danger:#9a4a3a;--danger-l:#f2e8e5;--ok:#4a6a3a;--ok-l:#e8f0e3;
+  --mp:#3483fa;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Jost',sans-serif;font-size:14px;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+.lb{font-family:'Libre Baskerville',Georgia,serif;}
+
+.header{background:#2e1a0a;}
+.header-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding:22px 36px 16px;background:linear-gradient(135deg,#2e1a0a 0%,#5a3520 55%,#3d2010 100%);}
+.header-title{font-family:'Libre Baskerville',serif;font-size:24px;font-weight:700;font-style:italic;color:#f5ede0;}
+.header-sub{font-size:11px;color:#c4a882;margin-top:4px;letter-spacing:.14em;text-transform:uppercase;}
+.dolar-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:9px 18px;text-align:right;}
+.dolar-label{font-size:10px;color:#c4a882;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px;}
+.dolar-vals{display:flex;gap:18px;align-items:baseline;}
+.dolar-vals span{font-size:13px;color:#c4a882;}
+.dolar-vals strong{color:#c4a882;}
+
+.month-nav{display:flex;align-items:center;gap:14px;padding:10px 36px;background:rgba(0,0,0,.18);border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap;}
+.mnav-btn{cursor:pointer;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#f5ede0;border-radius:4px;padding:4px 14px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;transition:background .15s;}
+.mnav-btn:hover{background:rgba(255,255,255,.22);}
+.mnav-month{font-family:'Libre Baskerville',serif;font-size:16px;font-style:italic;color:#f5ede0;min-width:150px;text-align:center;}
+.mnav-upload{cursor:pointer;background:rgba(196,132,90,.25);border:1px solid rgba(196,132,90,.4);color:#e8c8a0;border-radius:4px;padding:4px 14px;font-family:'Jost',sans-serif;font-size:12px;transition:all .15s;}
+.mnav-upload:hover{background:rgba(196,132,90,.38);}
+#file-input{display:none;}
+.upload-note{font-size:11px;color:#c4a882;}
+
+.tabs{display:flex;background:rgba(0,0,0,.22);padding:0 24px;flex-wrap:wrap;}
+.tab{cursor:pointer;padding:10px 18px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;border:none;background:transparent;border-bottom:3px solid transparent;color:#c4a882;transition:all .18s;font-family:'Jost',sans-serif;font-weight:500;}
+.tab.active{color:#f5ede0;border-bottom-color:#c4845a;}
+.tab:hover:not(.active){color:#e8ddd0;}
+
+.main{padding:28px 36px;max-width:1300px;margin:0 auto;}
+.section{display:none;}.section.active{display:block;}
+
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:22px 26px;box-shadow:0 2px 12px rgba(46,26,10,.07);}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px;}
+@media(max-width:760px){.grid-3{grid-template-columns:1fr;}}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-bottom:22px;}
+.res-total{font-size:clamp(16px,2.2vw,24px);font-weight:700;color:var(--text);line-height:1.2;word-break:break-all;}
+.grid-extras{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:20px;}
+
+.sec-title{font-family:'Libre Baskerville',serif;font-size:21px;font-style:italic;color:var(--text);margin-bottom:6px;}
+.sec-sub{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.5;}
+
+.filter-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+.pill{cursor:pointer;padding:5px 14px;border-radius:20px;font-size:11px;letter-spacing:.08em;border:1px solid var(--border);color:var(--muted);transition:all .15s;background:transparent;font-family:'Jost',sans-serif;}
+.pill.active{background:var(--accent);color:#f5ede0;border-color:var(--accent);}
+.pill:hover:not(.active){color:var(--text);border-color:var(--accent);background:var(--accent-l);}
+.search-inp{margin-left:auto;width:180px;}
+
+input,select{font-family:'Jost',sans-serif;font-size:13px;border:1px solid var(--border);border-radius:6px;padding:5px 10px;color:var(--text);background:var(--white);transition:border-color .15s;}
+input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(46,26,10,.08);}
+input[type=checkbox]{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;margin:0;}
+input[type=number]{-moz-appearance:textfield;}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;}
+
+.btn{cursor:pointer;font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:.08em;padding:5px 14px;border-radius:20px;border:none;transition:all .15s;}
+.btn-p{background:var(--accent-l);color:var(--accent);}
+.btn-p:hover{background:var(--border);}
+.btn-d{background:var(--danger-l);color:var(--danger);border:1px solid #e0c8c4;}
+.btn-d:hover{background:#e8d0cc;}
+.btn-s{background:var(--accent);color:#f5ede0;}
+.btn-s:hover{background:var(--accent2);}
+.btn-g{background:var(--ok-l);color:var(--ok);}
+.btn-add{background:var(--warm1);color:#fff;border-radius:6px;padding:7px 18px;font-size:12px;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-weight:500;}
+.btn-add:hover{background:#b07448;}
+.btn-dup{background:#e8f0e3;color:var(--ok);border:1px solid #c8dcc4;}
+.btn-dup:hover{background:#d4e8d0;}
+
+.stat-bar{border-top:1px solid var(--border);margin-top:14px;padding-top:14px;display:flex;justify-content:space-between;align-items:center;}
+
+.tbl-wrap{overflow-x:auto;background:var(--white);border:1px solid var(--border);border-radius:10px;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead tr{border-bottom:2px solid var(--bg2);background:var(--bg);}
+th{padding:11px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+th.r{text-align:right;}td.r{text-align:right;font-variant-numeric:tabular-nums;}td.c{text-align:center;}
+td{padding:9px 12px;border-bottom:1px solid #f0ebe3;}
+tr.paid td{opacity:.38;}
+tr.data-row:hover td{background:#f5f0e8;}
+tfoot tr{border-top:2px solid var(--border);background:var(--bg);}
+tfoot td{padding:11px 12px;}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+.tag-row{display:flex;align-items:center;font-size:11px;color:var(--muted);white-space:nowrap;}
+
+.deleted-wrap{margin-bottom:14px;}
+.deleted-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--danger-l);border:1px solid #dcc8c4;border-radius:8px;padding:10px 16px;user-select:none;}
+.deleted-toggle:hover{background:#edd8d4;}
+.deleted-arrow{font-size:11px;transition:transform .2s;color:var(--danger);display:inline-block;}
+.deleted-arrow.open{transform:rotate(90deg);}
+.deleted-body{background:var(--danger-l);border:1px solid #dcc8c4;border-top:none;border-radius:0 0 8px 8px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;}
+.deleted-body.open{max-height:600px;padding:10px 16px;}
+.deleted-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #e8d8d4;font-size:12px;}
+.deleted-row:last-child{border-bottom:none;}
+
+.grand-total{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;border-left:5px solid var(--warm1);background:linear-gradient(90deg,#faf5ee,var(--white));}
+
+.add-form{background:var(--white);border:2px dashed var(--border);border-radius:10px;padding:18px 22px;margin-bottom:18px;}
+.add-form-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr auto;gap:10px;align-items:end;}
+@media(max-width:900px){.add-form-grid{grid-template-columns:1fr 1fr;}}
+.form-label{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;font-weight:600;}
+
+.dh-grid{display:grid;grid-template-columns:1fr 160px 140px 36px;gap:10px;align-items:center;margin-bottom:10px;}
+.dh-header{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
+.dh-result-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;text-align:center;margin-bottom:24px;}
+.dh-amount{font-family:'Libre Baskerville',serif;font-size:26px;}
+.dh-final{text-align:center;border-top:1px solid var(--border);padding-top:22px;}
+.dh-net{font-family:'Libre Baskerville',serif;font-size:32px;font-style:italic;}
+.op-row{display:flex;gap:5px;align-items:center;justify-content:flex-end;}
+.row-actions{display:flex;gap:4px;justify-content:flex-end;white-space:nowrap;}
+.empty-state{text-align:center;padding:52px 0;color:var(--muted);}
+.add-card{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;border:2px dashed var(--border);border-radius:10px;padding:22px;cursor:pointer;background:transparent;transition:all .15s;}
+.add-card:hover{background:var(--accent-l);border-color:var(--accent);}
+code.hint{background:var(--accent-l);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--accent);font-family:monospace;}
+.paid-label{font-size:11px;color:var(--ok);font-weight:500;}
+.extra-result{font-family:'Libre Baskerville',serif;font-size:22px;margin-top:6px;}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(46,26,10,.5);z-index:100;align-items:center;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--white);border-radius:12px;padding:28px;width:420px;max-width:95vw;box-shadow:0 8px 40px rgba(46,26,10,.3);}
+.modal-title{font-family:'Libre Baskerville',serif;font-size:18px;font-style:italic;color:var(--text);margin-bottom:16px;}
+.modal-row{margin-bottom:14px;}
+.modal-label{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:5px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+
+/* AHORRO */
+.ahorro-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-bottom:22px;}
+.ahorro-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:22px 24px;}
+.ahorro-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.ahorro-moneda-toggle{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.ahorro-moneda-btn{cursor:pointer;padding:4px 12px;font-size:11px;font-family:'Jost',sans-serif;font-weight:500;border:none;background:transparent;color:var(--muted);transition:all .15s;}
+.ahorro-moneda-btn.active{background:var(--accent);color:#f5ede0;}
+.ahorro-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.ahorro-item:last-child{border-bottom:none;}
+.ahorro-icon{font-size:20px;margin-top:2px;}
+.ahorro-label{font-size:13px;font-weight:500;color:var(--text);}
+.ahorro-destino{font-size:11px;color:var(--muted);margin-top:2px;}
+.ahorro-amount{font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:var(--ok);margin-top:4px;}
+.ahorro-total-bar{background:var(--accent-l);border-radius:8px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.add-ahorro-form{background:var(--bg);border:1px dashed var(--border);border-radius:8px;padding:16px;margin-top:16px;}
+.add-ahorro-grid{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;}
+@media(max-width:600px){.add-ahorro-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="header-title">Mis Tarjetas</div>
+      <div class="header-sub"><span id="mov-count">0</span> movimientos activos</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <div class="dolar-box">
+        <div class="dolar-label" id="dolar-label">Dólar Banco Galicia</div>
+        <div class="dolar-vals" id="dolar-vals"><span>cargando…</span></div>
+      </div>
+      <div id="sync-indicator" style="display:flex;align-items:center;gap:5px;min-height:18px"></div>
+    </div>
+  </div>
+  <div class="month-nav">
+    <button class="mnav-btn" onclick="changeMonth(-1)">← Anterior</button>
+    <div class="mnav-month" id="month-display">Mayo 2026</div>
+    <button class="mnav-btn" onclick="changeMonth(1)">Siguiente →</button>
+    <label class="mnav-upload" for="file-input">📎 Adjuntar resumen</label>
+    <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFile(this)">
+    <span class="upload-note" id="upload-note"></span>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('resumen',this)">Resúmenes</button>
+    <button class="tab" onclick="showTab('gastos',this)">Gastos del mes</button>
+    <button class="tab" onclick="showTab('extras',this)">Ingresos</button>
+    <button class="tab" onclick="showTab('debehaber',this)">Debe &amp; Haber</button>
+    <button class="tab" onclick="showTab('ahorro',this)">Ahorro</button>
+    <button class="tab" onclick="showTab('deudacasa',this)">Deuda Casa</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- RESUMEN -->
+  <div id="sec-resumen" class="section active">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+      <h2 class="sec-title" style="margin-bottom:0">Resúmenes generales</h2>
+      <span style="font-size:11px;color:var(--muted)">Los totales se actualizan al eliminar gastos</span>
+    </div>
+    <div class="grid-4" id="resumen-cards"></div>
+    <div class="card grand-total" id="grand-total-card"></div>
+  </div>
+
+  <!-- GASTOS -->
+  <div id="sec-gastos" class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+      <h2 class="sec-title" style="margin-bottom:0">Gastos del mes</h2>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <label style="font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;cursor:pointer">
+          <input type="checkbox" id="show-paid-cb" checked onchange="renderTable()"> Mostrar pagados
+        </label>
+        <span class="paid-label" id="paid-count"></span>
+        <button id="op-mode-btn" class="btn" style="font-size:11px;background:#fff8ee;color:var(--warm2);border:1px solid #e8c88a" onclick="toggleOpMode()">÷× Operación múltiple</button>
+      </div>
+    </div>
+    <div class="add-form">
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:12px">+ Agregar gasto manualmente</div>
+      <div class="add-form-grid">
+        <div><div class="form-label">Detalle</div><input id="nw-detalle" placeholder="Nombre del gasto" style="width:100%"></div>
+        <div><div class="form-label">Tarjeta / fuente</div>
+          <select id="nw-tarjeta" style="width:100%" onchange="toggleOtraFuente(this)">
+            <option value="VISA Kevin (BBVA)">VISA · BBVA</option>
+            <option value="MC Lucia (Galicia)">MC · Galicia</option>
+            <option value="VISA Lucia (Galicia)">VISA · Galicia Ém.</option>
+            <option value="Mercado Pago">Mercado Pago</option>
+            <option value="__otra__">Otra…</option>
+          </select>
+          <input id="nw-otra-fuente" placeholder="Nombre de la fuente" style="width:100%;margin-top:6px;display:none">
+        </div>
+        <div><div class="form-label">Titular</div><input id="nw-titular" placeholder="Kevin / Lucia" style="width:100%"></div>
+        <div><div class="form-label">Monto $</div><input id="nw-pesos" type="number" placeholder="0" style="width:100%;text-align:right"></div>
+        <div><div class="form-label">USD</div><input id="nw-usd" type="number" placeholder="0" style="width:100%;text-align:right"></div>
+        <div><div class="form-label">Cuota (ej: 1/3)</div><input id="nw-cuota" placeholder="–" style="width:100%"></div>
+        <div style="padding-top:18px"><button class="btn-add" onclick="addGasto()">Agregar</button></div>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <button class="pill active" onclick="setFilter('Todas',this)">Todas</button>
+      <button class="pill" onclick="setFilter('VISA Kevin (BBVA)',this)">VISA · BBVA</button>
+      <button class="pill" onclick="setFilter('MC Lucia (Galicia)',this)">MC · Galicia</button>
+      <button class="pill" onclick="setFilter('VISA Lucia (Galicia)',this)">VISA · Galicia Ém.</button>
+      <button class="pill" onclick="setFilter('Mercado Pago',this)">Mercado Pago</button>
+      <div id="extra-pills"></div>
+      <input type="text" class="search-inp" placeholder="Buscar…" oninput="setSearch(this.value)">
+    </div>
+    <div id="deleted-wrap-el"></div>
+    <div id="bulk-bar" style="display:none;background:var(--accent-l);border:1px solid var(--border);border-radius:8px;padding:10px 16px;margin-bottom:10px;display:none;align-items:center;gap:12px;flex-wrap:wrap">
+      <span id="bulk-count" style="font-size:12px;color:var(--accent);font-weight:600"></span>
+      <select id="bulk-dir" style="font-size:12px">
+        <option value="L→K">Lucia → Kevin</option>
+        <option value="K→L">Kevin → Lucia</option>
+      </select>
+      <button class="btn btn-s" onclick="bulkSendDH()" style="font-size:12px">⇄ Enviar a Debe &amp; Haber</button>
+      <button class="btn btn-s" onclick="startBulkOp()" style="font-size:12px;background:var(--warm2)">÷× Operar seleccionados</button>
+      <button class="btn btn-p" onclick="clearSelection()" style="font-size:12px">✕ Cancelar selección</button>
+    </div>
+    <div id="op-bulk-bar" style="display:none;background:#fff8ee;border:1px solid #e8c88a;border-radius:8px;padding:10px 16px;margin-bottom:10px;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-size:12px;color:var(--warm2);font-weight:600" id="op-bulk-count"></span>
+      <select id="op-bulk-type" style="font-size:12px;padding:4px 8px">
+        <option value="/">÷ Dividir</option>
+        <option value="*">× Multiplicar</option>
+        <option value="+">+ Sumar</option>
+        <option value="-">− Restar</option>
+      </select>
+      <input type="number" id="op-bulk-val" placeholder="valor" style="width:80px;font-size:13px;text-align:right">
+      <button class="btn btn-s" style="font-size:12px;background:var(--warm2)" onclick="applyBulkOp()">Aplicar a seleccionados</button>
+      <button class="btn btn-p" style="font-size:12px" onclick="cancelBulkOp()">✕ Cancelar</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:30px"><input type="checkbox" id="sel-all-cb" title="Seleccionar todos" onchange="toggleSelectAll(this.checked)" style="accent-color:var(--warm1)"></th>
+          <th style="width:30px">✓</th>
+          <th>Fuente</th><th>Titular</th><th>Fecha</th><th>Detalle</th>
+          <th class="r">Cuota</th><th class="r">Pesos</th><th class="r">USD</th>
+          <th style="width:200px"></th>
+        </tr></thead>
+        <tbody id="gastos-tbody"></tbody>
+        <tfoot id="gastos-tfoot"></tfoot>
+      </table>
+    </div>
+
+    <!-- SUB-SECCIÓN: GASTOS DETECTADOS POR IA -->
+    <div id="otra-panel" style="display:none;margin-top:28px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="background:var(--warm1);color:#fff;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:20px">
+          📷 Otra — leído por IA
+        </div>
+        <span style="font-size:12px;color:var(--muted)">Elegí la fuente de cada gasto y hacé clic en <strong>Mover →</strong> para agregarlo a tus gastos</span>
+        <button class="btn btn-d" style="margin-left:auto" onclick="otraLimpiar()">Limpiar lista</button>
+      </div>
+      <!-- imagen de referencia -->
+      <div id="otra-img-preview" style="display:none;margin-bottom:14px">
+        <img id="otra-img-el" style="max-width:100%;max-height:260px;border-radius:8px;border:1px solid var(--border)" alt="Resumen">
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th>Detalle</th>
+            <th class="r">Cuota</th>
+            <th class="r">Pesos</th>
+            <th class="r">USD</th>
+            <th style="width:170px">Mover a fuente</th>
+            <th style="width:90px"></th>
+          </tr></thead>
+          <tbody id="otra-tbody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-p" onclick="otraMoverTodos()">Mover todos al mismo destino…</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXTRAS -->
+  <div id="sec-extras" class="section">
+    <h2 class="sec-title">Ingresos</h2>
+    <p class="sec-sub">Registrá tu sueldo y otros ingresos. Las fórmulas también funcionan: <code class="hint">150000 + 80000</code></p>
+
+    <!-- SUELDO -->
+    <div class="card" style="margin-bottom:22px;border-top:4px solid var(--ok)">
+      <div style="font-size:10px;color:var(--ok);letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:14px">Sueldo del mes</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end">
+        <div>
+          <div class="form-label">Titular</div>
+          <input id="sal-quien" placeholder="Kevin / Lucia / Ambos" style="width:100%">
+        </div>
+        <div>
+          <div class="form-label">Monto neto $</div>
+          <input id="sal-monto" type="number" placeholder="0" style="width:100%;text-align:right">
+        </div>
+        <div>
+          <div class="form-label">Descripción (opcional)</div>
+          <input id="sal-desc" placeholder="Ej: Sueldo abril, bono..." style="width:100%">
+        </div>
+        <div style="padding-top:18px">
+          <button class="btn-add" onclick="addSalario()">Agregar</button>
+        </div>
+      </div>
+      <div id="salarios-lista" style="margin-top:14px"></div>
+    </div>
+
+    <!-- OTROS INGRESOS -->
+    <div style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:10px">Otros ingresos / fórmulas</div>
+    <div class="grid-extras" id="extras-grid"></div>
+    <div id="extras-summary"></div>
+  </div>
+
+  <!-- DEBE / HABER -->
+  <div id="sec-debehaber" class="section">
+    <h2 class="sec-title">Debe &amp; Haber</h2>
+    <p class="sec-sub">Podés agregar conceptos manuales o enviarlos desde la solapa de gastos con el botón ⇄.</p>
+    <div class="card" style="margin-bottom:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="display:flex;gap:8px;align-items:center;flex:1">
+          <span class="dh-header" style="flex:1">Concepto</span>
+          <span class="dh-header" style="width:140px">Quién debe</span>
+          <span class="dh-header" style="width:140px;text-align:right">Monto $</span>
+          <span style="width:36px"></span>
+        </div>
+        <button onclick="toggleDhRows()" id="dh-toggle-btn" class="btn btn-p" style="margin-left:12px;padding:4px 10px;font-size:11px">▲ Contraer</button>
+      </div>
+      <div id="dh-rows-wrap">
+        <div id="dh-rows"></div>
+        <button class="btn btn-p" style="margin-top:10px" onclick="addDhRow()">+ Agregar manual</button>
+      </div>
+    </div>
+    <div id="dh-result"></div>
+  </div>
+
+  <!-- AHORRO -->
+  <div id="sec-ahorro" class="section">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+      <h2 class="sec-title" style="margin-bottom:0">Ahorro</h2>
+      <span style="font-size:11px;color:var(--muted)">Registrá tus metas y lo que ya ahorraste</span>
+    </div>
+    <div class="ahorro-grid" id="ahorro-lista"></div>
+    <!-- Totales -->
+    <div id="ahorro-totales"></div>
+    <!-- Agregar nueva meta -->
+    <div class="card" style="margin-top:20px">
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:14px">+ Nueva meta de ahorro</div>
+      <div class="add-ahorro-grid">
+        <div>
+          <div class="form-label">Destino / motivo</div>
+          <input id="ah-destino" placeholder="Ej: Viaje a Europa, Fondo de emergencia…" style="width:100%">
+        </div>
+        <div>
+          <div class="form-label">Moneda</div>
+          <select id="ah-moneda" style="width:100%" onchange="toggleAhorroCotiz()">
+            <option value="ARS">Pesos ($)</option>
+            <option value="USD">Dólares (USD)</option>
+          </select>
+        </div>
+        <div>
+          <div class="form-label">Monto guardado</div>
+          <input id="ah-monto" type="number" placeholder="0" style="width:100%;text-align:right">
+        </div>
+        <div style="padding-top:18px">
+          <button class="btn-add" onclick="addAhorro()">Agregar</button>
+        </div>
+      </div>
+      <div id="ah-cotiz-box" style="display:none;background:var(--ok-l);border:1px solid #c8dcc4;border-radius:8px;padding:12px 16px;margin-top:10px">
+        <div style="font-size:10px;color:var(--ok);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:6px">Cotización Dólar Banco Galicia — venta</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:11px;color:var(--muted)">1 USD =</span>
+          <input type="number" id="ah-tc" style="width:100px;text-align:right;font-size:16px;font-weight:700;color:var(--ok)" placeholder="1445">
+          <span style="font-size:11px;color:var(--muted)">ARS</span>
+          <span style="font-size:10px;color:var(--muted);margin-left:4px">(editable)</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">El monto en USD se convertirá a pesos al guardar usando este tipo de cambio.</div>
+      </div>
+        <div style="flex:1;min-width:200px">
+          <div class="form-label">Meta / objetivo (opcional)</div>
+          <input id="ah-meta" type="number" placeholder="0 = sin meta definida" style="width:100%;text-align:right">
+        </div>
+        <div style="flex:1;min-width:200px">
+          <div class="form-label">Emoji / ícono (opcional)</div>
+          <input id="ah-emoji" placeholder="🏠 ✈️ 💍 🚗 📚" style="width:100%">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEUDA CASA -->
+  <div id="sec-deudacasa" class="section">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+      <h2 class="sec-title" style="margin-bottom:0">Deuda Casa</h2>
+      <span style="font-size:11px;color:var(--muted)">Registrá cada pago en dólares y a quién se lo hiciste</span>
+    </div>
+
+    <!-- TARJETA DEUDA TOTAL -->
+    <div id="dc-total-card" style="margin-bottom:22px"></div>
+
+    <!-- FORM AGREGAR PAGO -->
+    <div class="add-form" style="margin-bottom:22px">
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:14px">+ Registrar pago</div>
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end" id="dc-form-grid">
+        <div>
+          <div class="form-label">Concepto / descripción</div>
+          <input id="dc-concepto" placeholder="Ej: Cuota enero, Expensas…" style="width:100%">
+        </div>
+        <div>
+          <div class="form-label">A quién</div>
+          <input id="dc-quien" placeholder="Ej: Propietario, Banco…" style="width:100%">
+        </div>
+        <div>
+          <div class="form-label">Monto USD</div>
+          <input id="dc-usd" type="number" placeholder="0" style="width:100%;text-align:right">
+        </div>
+        <div>
+          <div class="form-label">Fecha</div>
+          <input id="dc-fecha" type="date" style="width:100%">
+        </div>
+        <div style="padding-top:18px">
+          <button class="btn-add" onclick="addDcPago()">Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLA PAGOS -->
+    <div id="dc-tabla-wrap">
+      <div class="empty-state" id="dc-empty">
+        <div style="font-size:40px;margin-bottom:10px">🏠</div>
+        <div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase">Todavía no hay pagos registrados.</div>
+      </div>
+      <div class="tbl-wrap" id="dc-tbl" style="display:none">
+        <table>
+          <thead><tr>
+            <th>Fecha</th>
+            <th>Concepto</th>
+            <th>A quién</th>
+            <th class="r">USD</th>
+            <th class="r">≈ Pesos</th>
+            <th style="width:50px"></th>
+          </tr></thead>
+          <tbody id="dc-tbody"></tbody>
+          <tfoot id="dc-tfoot"></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+<div class="modal-bg" id="dup-modal">  <div class="modal">
+    <div class="modal-title">Enviar a Debe &amp; Haber</div>
+    <div class="modal-row">
+      <div class="modal-label">Concepto</div>
+      <div id="dup-concepto" style="font-size:13px;color:var(--text);padding:6px 0;font-weight:500"></div>
+    </div>
+    <div class="modal-row">
+      <div class="modal-label">Monto</div>
+      <div id="dup-monto" style="font-size:20px;font-family:'Libre Baskerville',serif;color:var(--accent)"></div>
+    </div>
+    <div class="modal-row">
+      <div class="modal-label">¿Quién debe a quién?</div>
+      <select id="dup-dir" style="width:100%;margin-top:5px">
+        <option value="L→K">Lucia le debe a Kevin</option>
+        <option value="K→L">Kevin le debe a Lucia</option>
+      </select>
+    </div>
+    <div class="modal-row">
+      <div class="modal-label">Monto a registrar</div>
+      <input type="number" id="dup-amount" style="width:100%;margin-top:5px;text-align:right">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-p" onclick="closeDupModal()">Cancelar</button>
+      <button class="btn btn-s" onclick="confirmDup()">Agregar a Debe &amp; Haber</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL cargar totales del mes -->
+<div class="modal-bg" id="load-totals-modal">
+  <div class="modal" style="width:500px">
+    <div class="modal-title">Cargar totales — <span id="lt-month-label"></span></div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px">Ingresá los totales a pagar de cada tarjeta tal como figuran en el resumen de cuenta.</p>
+    <div id="lt-fields"></div>
+    <div class="modal-actions">
+      <button class="btn btn-p" onclick="closeLoadTotalsModal()">Cancelar</button>
+      <button class="btn btn-s" onclick="saveLoadTotals()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL Deuda Total Casa -->
+<div class="modal-bg" id="dc-total-modal">
+  <div class="modal">
+    <div class="modal-title">Configurar deuda total</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px">Ingresá el monto total de la deuda. A medida que registrés pagos, se irá descontando automáticamente.</p>
+    <div class="modal-row">
+      <div class="modal-label">Monto total (USD)</div>
+      <input type="number" id="dct-usd" placeholder="Ej: 150000" style="width:100%;margin-top:5px;text-align:right;font-size:18px;font-weight:700">
+    </div>
+    <div class="modal-row">
+      <div class="modal-label">Descripción (opcional)</div>
+      <input id="dct-desc" placeholder="Ej: Crédito hipotecario, Deuda propietario…" style="width:100%;margin-top:5px">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-p" onclick="closeDcTotalModal()">Cancelar</button>
+      <button class="btn btn-s" onclick="saveDcTotal()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ CONSTANTS ═══════════════════════════════════════════════
+const MONTHS_ES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+const TARJETA_META={
+  "VISA Kevin (BBVA)":    {dot:"#c4845a",label:"VISA · BBVA",color:"var(--warm1)"},
+  "MC Lucia (Galicia)":   {dot:"#8b6d4a",label:"MC · Galicia",color:"var(--warm2)"},
+  "VISA Lucia (Galicia)": {dot:"#6b7a5a",label:"VISA · Galicia Ém.",color:"var(--warm3)"},
+  "Mercado Pago":         {dot:"#3483fa",label:"Mercado Pago",color:"#3483fa"},
+};
+
+// Totales reales del PDF por mes. Key: "YYYY-M" → objeto con totales por tarjeta
+// Mayo 2026 viene precargado con los PDFs que subiste
+const SUMMARY_REAL_BY_MONTH = {
+  "2026-4": {
+    "VISA Kevin (BBVA)":    {total:2761095.60, usd:36.56,  minPago:444820.00},
+    "MC Lucia (Galicia)":   {total:86993.27,   usd:0,      minPago:10240.00},
+    "VISA Lucia (Galicia)": {total:1144709.23,  usd:10.97,  minPago:21610.00},
+    "Mercado Pago":         {total:0,           usd:0,      minPago:0},
+  }
+};
+
+function getSummaryReal(){
+  return SUMMARY_REAL_BY_MONTH[mkId()] || {};
+}
+
+// Para el grand total también necesitamos SUMMARY_REAL como variable (usado en minTotal)
+const SUMMARY_REAL = {
+  "VISA Kevin (BBVA)":    {total:2761095.60, usd:36.56,  minPago:444820.00},
+  "MC Lucia (Galicia)":   {total:86993.27,   usd:0,      minPago:10240.00},
+  "VISA Lucia (Galicia)": {total:1144709.23,  usd:10.97,  minPago:21610.00},
+  "Mercado Pago":         {total:0,           usd:0,      minPago:0},
+};
+
+// ═══ STATE ═══════════════════════════════════════════════════
+const _now=new Date();
+let currentMonth=_now.getMonth(), currentYear=_now.getFullYear();
+let monthsData={}, deletedData={};
+let currentFilter='Todas', currentSearch='';
+let editingId=null, opRowId=null, editBuffer={};
+let deletedOpen=false;
+let salarios=[];
+let extras=[
+  {id:1,label:'Aguinaldo',formula:'',result:0},
+  {id:2,label:'Comisión',formula:'',result:0},
+  {id:3,label:'Bono',formula:'',result:0},
+];
+let dhRows=[];
+let ahorros=[];
+let nextId=300;
+let dolarCompra=1395, dolarVenta=1445; // Galicia hoy 02/06/2026
+let dupItemId=null;
+let selectedIds=new Set();
+let opSelectedIds=new Set();
+let opMode=false; // cuando true, la columna de checkbox es para operaciones
+
+// ═══ SEED MAYO 2026 ══════════════════════════════════════════
+monthsData["2026-4"]=[
+  {id:1,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"04/07/25",detalle:"DLO*MUEBLES DE DISEO GI",cuota:"11/12",pesos:52366.66,usd:0,pagado:false},
+  {id:2,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"08/12/25",detalle:"MERPAGO*EXPRESOPOLAR",cuota:"06/06",pesos:32999.78,usd:0,pagado:false},
+  {id:3,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"04/02/26",detalle:"PRESTIGIO SA",cuota:"04/06",pesos:20226.16,usd:0,pagado:false},
+  {id:4,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"31/03/26",detalle:"MERPAGO*SOMMIERCENTER",cuota:"02/03",pesos:22458.37,usd:0,pagado:false},
+  {id:5,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"01/05/26",detalle:"HOYTS",cuota:"–",pesos:86070,usd:0,pagado:false},
+  {id:6,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"03/05/26",detalle:"MERPAGO*TELECENTRO",cuota:"–",pesos:25192.48,usd:0,pagado:false},
+  {id:7,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"04/05/26",detalle:"MERPAGO*LUISALBERTOGUATA",cuota:"–",pesos:2214.69,usd:0,pagado:false},
+  {id:8,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"04/05/26",detalle:"MERPAGO*MERCADERDELBA",cuota:"01/09",pesos:11666.72,usd:0,pagado:false},
+  {id:9,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"07/05/26",detalle:"MERPAGO*LUISALBERTOGUATA (b)",cuota:"–",pesos:1979.32,usd:0,pagado:false},
+  {id:10,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"15/05/26",detalle:"MERPAGO*MELI",cuota:"–",pesos:3490,usd:0,pagado:false},
+  {id:11,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"16/05/26",detalle:"MERPAGO*TELRIV",cuota:"01/06",pesos:7583.35,usd:0,pagado:false},
+  {id:12,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"19/05/26",detalle:"MERPAGO*KINDERLAND",cuota:"–",pesos:44990,usd:0,pagado:false},
+  {id:13,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"19/05/26",detalle:"MERPAGO*LAKOBRASA",cuota:"01/04",pesos:7672.29,usd:0,pagado:false},
+  {id:14,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"19/05/26",detalle:"MERPAGO*LUISALBERTOGUATA (c)",cuota:"–",pesos:1604.85,usd:0,pagado:false},
+  {id:15,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"20/05/26",detalle:"MERPAGO*GRUPOFARMACIT",cuota:"–",pesos:23550.23,usd:0,pagado:false},
+  {id:16,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"20/05/26",detalle:"MERPAGO*LUISALBERTOGUATA (d)",cuota:"–",pesos:6890.16,usd:0,pagado:false},
+  {id:17,tarjeta:"VISA Kevin (BBVA)",titular:"Kevin",fecha:"22/05/26",detalle:"MERPAGO*HAIYUNLIN",cuota:"–",pesos:39586.30,usd:0,pagado:false},
+  {id:18,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"12/05/25",detalle:"WWW.FRAVEGA.COM-PROM",cuota:"13/15",pesos:126666.60,usd:0,pagado:false},
+  {id:19,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"15/05/25",detalle:"WWW.FRAVEGA.COM-PROM (b)",cuota:"13/15",pesos:21893.20,usd:0,pagado:false},
+  {id:20,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"01/07/25",detalle:"ONCITY.COM",cuota:"11/12",pesos:54408.25,usd:0,pagado:false},
+  {id:21,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"29/08/25",detalle:"ELECTROLUX",cuota:"09/12",pesos:105370.75,usd:0,pagado:false},
+  {id:22,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"20/10/25",detalle:"DESPEGAR.COM.AR SA",cuota:"08/09",pesos:46554.08,usd:0,pagado:false},
+  {id:23,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"30/11/25",detalle:"WWW.CARREFOUR.COM.AR",cuota:"06/09",pesos:78222.11,usd:0,pagado:false},
+  {id:24,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"20/12/25",detalle:"PARFUMERIE",cuota:"06/06",pesos:32040,usd:0,pagado:false},
+  {id:25,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"17/01/26",detalle:"GANGA HOME",cuota:"05/12",pesos:23085.58,usd:0,pagado:false},
+  {id:26,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"03/04/26",detalle:"MERPAGO*TRAZSOCIEDADA",cuota:"02/03",pesos:14996.66,usd:0,pagado:false},
+  {id:27,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"03/04/26",detalle:"MERPAGO*GANGAHOME",cuota:"02/09",pesos:26017.33,usd:0,pagado:false},
+  {id:28,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"04/04/26",detalle:"DLO*Ganga Home",cuota:"02/06",pesos:27536.60,usd:0,pagado:false},
+  {id:29,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"30/04/26",detalle:"MERPAGO*CPDEANFUNES",cuota:"–",pesos:10619,usd:0,pagado:false},
+  {id:30,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"30/04/26",detalle:"ZURICH SEGUROS",cuota:"–",pesos:217067.61,usd:0,pagado:false},
+  {id:31,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"30/04/26",detalle:"DLO*PEDIDOSYA JUMBO AL",cuota:"–",pesos:33860.60,usd:0,pagado:false},
+  {id:32,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"30/04/26",detalle:"DLO*PEDIDOSYA PROPINA",cuota:"–",pesos:140,usd:0,pagado:false},
+  {id:33,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"30/04/26",detalle:"PEDIDOSYA*MAXIKIOSCO Y",cuota:"–",pesos:9979,usd:0,pagado:false},
+  {id:34,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"01/05/26",detalle:"PAYU*AR*UBER",cuota:"–",pesos:23831,usd:0,pagado:false},
+  {id:35,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"01/05/26",detalle:"MERPAGO*FERNANDEZJAVIE",cuota:"–",pesos:9629.10,usd:0,pagado:false},
+  {id:36,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"01/05/26",detalle:"DLO*PEDIDOSYA RAPANUI",cuota:"–",pesos:14629,usd:0,pagado:false},
+  {id:37,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"01/05/26",detalle:"DLO*PEDIDOSYA PROPINA (a)",cuota:"–",pesos:450,usd:0,pagado:false},
+  {id:38,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"02/05/26",detalle:"MERPAGO*MATERIALESYSANITA",cuota:"–",pesos:3209.70,usd:0,pagado:false},
+  {id:39,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"02/05/26",detalle:"DLO*PEDIDOSYA PROPINA (b)",cuota:"–",pesos:381,usd:0,pagado:false},
+  {id:40,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"03/05/26",detalle:"MERPAGO*JULIANBASSO",cuota:"–",pesos:6419.40,usd:0,pagado:false},
+  {id:41,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"03/05/26",detalle:"MERPAGO*SAKURAJAPAN",cuota:"01/06",pesos:33600,usd:0,pagado:false},
+  {id:42,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"03/05/26",detalle:"DLO*PEDIDOSYA RAPANUI (b)",cuota:"–",pesos:16789,usd:0,pagado:false},
+  {id:43,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"03/05/26",detalle:"DLO*PEDIDOSYA PROPINA (c)",cuota:"–",pesos:211,usd:0,pagado:false},
+  {id:44,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"03/05/26",detalle:"MAXI AV SAN JUAN 3330 (a)",cuota:"–",pesos:13318,usd:0,pagado:false},
+  {id:45,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"03/05/26",detalle:"MAXI AV SAN JUAN 3330 (b)",cuota:"–",pesos:24790,usd:0,pagado:false},
+  {id:46,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"04/05/26",detalle:"MERPAGO*JULIANBASSO (b)",cuota:"–",pesos:3209.70,usd:0,pagado:false},
+  {id:47,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"04/05/26",detalle:"EDESUR DEB AUT 030839579",cuota:"–",pesos:11513.56,usd:0,pagado:false},
+  {id:48,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"04/05/26",detalle:"AGUA Y SANEAMIEN 456761",cuota:"–",pesos:21260.38,usd:0,pagado:false},
+  {id:49,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"04/05/26",detalle:"TUENTI RECARGAS DCP",cuota:"–",pesos:12950,usd:0,pagado:false},
+  {id:50,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"04/05/26",detalle:"EMOVA SUBTE (a)",cuota:"–",pesos:1490,usd:0,pagado:false},
+  {id:51,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"05/05/26",detalle:"MERPAGO*COCODIETETICA",cuota:"–",pesos:15950,usd:0,pagado:false},
+  {id:52,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"05/05/26",detalle:"METROGAS SA DEB 497844",cuota:"–",pesos:11332.88,usd:0,pagado:false},
+  {id:53,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"05/05/26",detalle:"EMOVA SUBTE (b)",cuota:"–",pesos:1490,usd:0,pagado:false},
+  {id:54,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"05/05/26",detalle:"MAXI AV SAN JUAN 3330 (c)",cuota:"–",pesos:18189,usd:0,pagado:false},
+  {id:55,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"06/05/26",detalle:"METROGAS SA DEB 855101",cuota:"–",pesos:8241.03,usd:0,pagado:false},
+  {id:56,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"06/05/26",detalle:"DLO*PRIMEVIDEO (a)",cuota:"–",pesos:7863.79,usd:0,pagado:false},
+  {id:57,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"06/05/26",detalle:"DLO*PRIMEVIDEO (b)",cuota:"–",pesos:7863.79,usd:0,pagado:false},
+  {id:58,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"06/05/26",detalle:"MAXI AV SAN JUAN 3330 (d)",cuota:"–",pesos:11943,usd:0,pagado:false},
+  {id:59,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"06/05/26",detalle:"APPLE.COM/BILL",cuota:"–",pesos:0,usd:0.99,pagado:false},
+  {id:60,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"07/05/26",detalle:"GCBA DGR ABL 113538109",cuota:"–",pesos:8776.55,usd:0,pagado:false},
+  {id:61,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"07/05/26",detalle:"GCBA DGR ABL 315269009",cuota:"–",pesos:14297.42,usd:0,pagado:false},
+  {id:62,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"07/05/26",detalle:"DLO*PEDIDOSYA BROWKIES (a)",cuota:"–",pesos:18229,usd:0,pagado:false},
+  {id:63,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"07/05/26",detalle:"DLO*PEDIDOSYA PROPINA (d)",cuota:"–",pesos:700,usd:0,pagado:false},
+  {id:64,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"07/05/26",detalle:"EMOVA SUBTE (c)",cuota:"–",pesos:1490,usd:0,pagado:false},
+  {id:65,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"08/05/26",detalle:"DLO*PEDIDOSYA STARBUCK",cuota:"–",pesos:21719,usd:0,pagado:false},
+  {id:66,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"08/05/26",detalle:"DLO*PEDIDOSYA PROPINA (e)",cuota:"–",pesos:281,usd:0,pagado:false},
+  {id:67,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"08/05/26",detalle:"DLO*PEDIDOSYA PROPINA (f)",cuota:"–",pesos:681,usd:0,pagado:false},
+  {id:68,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"08/05/26",detalle:"DLO*PEDIDOSYA PROPINA (g)",cuota:"–",pesos:582,usd:0,pagado:false},
+  {id:69,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"08/05/26",detalle:"PEDIDOSYA*RAPANUI HIDAL",cuota:"–",pesos:16418,usd:0,pagado:false},
+  {id:70,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"08/05/26",detalle:"EMOVA SUBTE (d)",cuota:"–",pesos:2980,usd:0,pagado:false},
+  {id:71,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"08/05/26",detalle:"APPLE.COM/BILL (b)",cuota:"–",pesos:0,usd:9.99,pagado:false},
+  {id:72,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"09/05/26",detalle:"PAYU*AR*UBER (b)",cuota:"–",pesos:22010,usd:0,pagado:false},
+  {id:73,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"09/05/26",detalle:"EMOVA SUBTE (e)",cuota:"–",pesos:1490,usd:0,pagado:false},
+  {id:74,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"09/05/26",detalle:"MAXI AV SAN JUAN 3330 (e)",cuota:"–",pesos:37571,usd:0,pagado:false},
+  {id:75,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"09/05/26",detalle:"MAXI AV SAN JUAN 3330 (f)",cuota:"–",pesos:1555.13,usd:0,pagado:false},
+  {id:76,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"10/05/26",detalle:"JAMON JAMON",cuota:"–",pesos:29479.50,usd:0,pagado:false},
+  {id:77,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"10/05/26",detalle:"DLO*PEDIDOSYA BROWKIES (b)",cuota:"–",pesos:21289,usd:0,pagado:false},
+  {id:78,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"10/05/26",detalle:"DLO*PEDIDOSYA PROPINA (h)",cuota:"–",pesos:700,usd:0,pagado:false},
+  {id:79,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"10/05/26",detalle:"DLO*RAPPI",cuota:"–",pesos:15060,usd:0,pagado:false},
+  {id:80,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"11/05/26",detalle:"DLO*PEDIDOSYA CARREFOU (a)",cuota:"–",pesos:40049,usd:0,pagado:false},
+  {id:81,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"11/05/26",detalle:"DLO*PEDIDOSYA PROPINA (i)",cuota:"–",pesos:451,usd:0,pagado:false},
+  {id:82,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"11/05/26",detalle:"EMOVA SUBTE (f)",cuota:"–",pesos:1490,usd:0,pagado:false},
+  {id:83,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"11/05/26",detalle:"MAXI AV SAN JUAN 3330 (g)",cuota:"–",pesos:125359.48,usd:0,pagado:false},
+  {id:84,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"12/05/26",detalle:"PAYU*AR*UBER (c)",cuota:"–",pesos:4635,usd:0,pagado:false},
+  {id:85,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"13/05/26",detalle:"FINCAS DEL SUR",cuota:"–",pesos:16158.93,usd:0,pagado:false},
+  {id:86,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"13/05/26",detalle:"EMOVA SUBTE (g)",cuota:"–",pesos:2980,usd:0,pagado:false},
+  {id:87,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"14/05/26",detalle:"MERPAGO*DAVIDHORACIOCONDO",cuota:"–",pesos:9629.10,usd:0,pagado:false},
+  {id:88,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"14/05/26",detalle:"EASY RIVADAVIA",cuota:"–",pesos:55067,usd:0,pagado:false},
+  {id:89,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"14/05/26",detalle:"ALLIANZ ARGENT",cuota:"–",pesos:24127.65,usd:0,pagado:false},
+  {id:90,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"14/05/26",detalle:"APPLE.COM/BILL MLJW4YFHL",cuota:"–",pesos:0,usd:5.19,pagado:false},
+  {id:91,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"15/05/26",detalle:"MERPAGO*TOJONICOLASAG",cuota:"–",pesos:10699,usd:0,pagado:false},
+  {id:92,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"15/05/26",detalle:"MAXI AV SAN JUAN 3330 (h)",cuota:"–",pesos:55500,usd:0,pagado:false},
+  {id:93,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"16/05/26",detalle:"ESTANCIA LOS CORRALES (a)",cuota:"–",pesos:79260,usd:0,pagado:false},
+  {id:94,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"16/05/26",detalle:"PAYU*AR*UBER (d)",cuota:"–",pesos:4290,usd:0,pagado:false},
+  {id:95,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"16/05/26",detalle:"DLO*PEDIDOSYA CARREFOU (b)",cuota:"–",pesos:25134,usd:0,pagado:false},
+  {id:96,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"16/05/26",detalle:"DLO*PEDIDOSYA PROPINA (j)",cuota:"–",pesos:366,usd:0,pagado:false},
+  {id:97,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"16/05/26",detalle:"MAXI AV SAN JUAN 3330 (i)",cuota:"–",pesos:17967,usd:0,pagado:false},
+  {id:98,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"17/05/26",detalle:"APPLE.COM/BILL (c)",cuota:"–",pesos:0,usd:0.99,pagado:false},
+  {id:99,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"18/05/26",detalle:"PAYU*AR*NETFLIX",cuota:"–",pesos:30198.49,usd:0,pagado:false},
+  {id:100,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"18/05/26",detalle:"DLO*PEDIDOSYA MOSTAZA",cuota:"–",pesos:18499,usd:0,pagado:false},
+  {id:101,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"18/05/26",detalle:"DLO*PEDIDOSYA PROPINA (k)",cuota:"–",pesos:800,usd:0,pagado:false},
+  {id:102,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"18/05/26",detalle:"EMOVA SUBTE (h)",cuota:"–",pesos:2980,usd:0,pagado:false},
+  {id:103,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"19/05/26",detalle:"AGUA Y SANEAMIEN 2103253",cuota:"–",pesos:33964.03,usd:0,pagado:false},
+  {id:104,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"19/05/26",detalle:"PAYU*AR*UBER (e)",cuota:"–",pesos:9459,usd:0,pagado:false},
+  {id:105,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"19/05/26",detalle:"PAYU*AR*UBER (f)",cuota:"–",pesos:9656,usd:0,pagado:false},
+  {id:106,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"20/05/26",detalle:"ESTANCIA LOS CORRALES (b)",cuota:"–",pesos:20440,usd:0,pagado:false},
+  {id:107,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"20/05/26",detalle:"MC DONALS AB2",cuota:"–",pesos:15899,usd:0,pagado:false},
+  {id:108,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"21/05/26",detalle:"MERPAGO*ALEKSANDRBRIKU (a)",cuota:"–",pesos:53495,usd:0,pagado:false},
+  {id:109,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"21/05/26",detalle:"MAXI AV SAN JUAN 3330 (j)",cuota:"–",pesos:57106,usd:0,pagado:false},
+  {id:110,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"22/05/26",detalle:"ESTANCIA LOS CORRALES (c)",cuota:"–",pesos:77850,usd:0,pagado:false},
+  {id:111,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"22/05/26",detalle:"EDESUR DEB AUT 060498377",cuota:"–",pesos:12714.67,usd:0,pagado:false},
+  {id:112,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"22/05/26",detalle:"DLO*PEDIDOSYA BURGER K",cuota:"–",pesos:15809,usd:0,pagado:false},
+  {id:113,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"22/05/26",detalle:"DLO*PEDIDOSYA EL CLUB",cuota:"–",pesos:30259,usd:0,pagado:false},
+  {id:114,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"22/05/26",detalle:"DLO*PEDIDOSYA MARKET",cuota:"–",pesos:31149,usd:0,pagado:false},
+  {id:115,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"22/05/26",detalle:"DLO*PEDIDOSYA PROPINA (l)",cuota:"–",pesos:341,usd:0,pagado:false},
+  {id:116,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"22/05/26",detalle:"DLO*PEDIDOSYA PROPINA (m)",cuota:"–",pesos:851,usd:0,pagado:false},
+  {id:117,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"22/05/26",detalle:"DLO*PedidosYa Propina (n)",cuota:"–",pesos:900,usd:0,pagado:false},
+  {id:118,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"22/05/26",detalle:"EMOVA SUBTE (i)",cuota:"–",pesos:1490,usd:0,pagado:false},
+  {id:119,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"22/05/26",detalle:"MAXI AV SAN JUAN 3330 (k)",cuota:"–",pesos:41155.87,usd:0,pagado:false},
+  {id:120,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"26/05/26",detalle:"MERPAGO*COCODIETETICA (a)",cuota:"–",pesos:12100,usd:0,pagado:false},
+  {id:121,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"26/05/26",detalle:"MERPAGO*ALEKSANDRBRIKU (b)",cuota:"–",pesos:53495,usd:0,pagado:false},
+  {id:122,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"26/05/26",detalle:"NETFLIX.COM",cuota:"–",pesos:0,usd:18.41,pagado:false},
+  {id:123,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"27/05/26",detalle:"MERPAGO*COCODIETETICA (b)",cuota:"–",pesos:13600,usd:0,pagado:false},
+  {id:124,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"27/05/26",detalle:"EMOVA SUBTE (j)",cuota:"–",pesos:1490,usd:0,pagado:false},
+  {id:125,tarjeta:"VISA Kevin (BBVA)",titular:"Lucia (adicional)",fecha:"27/05/26",detalle:"APPLE.COM/BILL (d)",cuota:"–",pesos:0,usd:0.99,pagado:false},
+  {id:126,tarjeta:"MC Lucia (Galicia)",titular:"Lucia",fecha:"01/05/26",detalle:"CABIFY (a)",cuota:"–",pesos:16694.39,usd:0,pagado:false},
+  {id:127,tarjeta:"MC Lucia (Galicia)",titular:"Lucia",fecha:"02/05/26",detalle:"CABIFY (b)",cuota:"–",pesos:16858.28,usd:0,pagado:false},
+  {id:128,tarjeta:"MC Lucia (Galicia)",titular:"Lucia",fecha:"08/05/26",detalle:"PAYU*AR*UBER",cuota:"–",pesos:13074,usd:0,pagado:false},
+  {id:129,tarjeta:"MC Lucia (Galicia)",titular:"Lucia",fecha:"20/05/26",detalle:"CABIFY (c)",cuota:"–",pesos:6336.33,usd:0,pagado:false},
+  {id:130,tarjeta:"MC Lucia (Galicia)",titular:"Lucia",fecha:"20/05/26",detalle:"PAYU*AR*UBER (b)",cuota:"–",pesos:4526,usd:0,pagado:false},
+  {id:131,tarjeta:"MC Lucia (Galicia)",titular:"Lucia",fecha:"16/11/25",detalle:"MERPAGO*GANGAHOME",cuota:"07/12",pesos:8805.91,usd:0,pagado:false},
+  {id:132,tarjeta:"MC Lucia (Galicia)",titular:"Lucia",fecha:"10/12/25",detalle:"MERPAGO*DETODONET",cuota:"06/06",pesos:8488,usd:0,pagado:false},
+  {id:133,tarjeta:"MC Lucia (Galicia)",titular:"Lucia",fecha:"22/12/25",detalle:"MERPAGO*CADETELIER",cuota:"06/06",pesos:17458.66,usd:0,pagado:false},
+  {id:134,tarjeta:"MC Lucia (Galicia)",titular:"Lucia",fecha:"23/12/25",detalle:"MERPAGO*CADETELIER (crédito)",cuota:"06/06",pesos:-5237.60,usd:0,pagado:false},
+  {id:135,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"20/12/25",detalle:"ROUGE E-COMMERCE",cuota:"06/09",pesos:53429.44,usd:0,pagado:false},
+  {id:136,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"26/02/26",detalle:"FARMACITY AV SAN JUA",cuota:"03/03",pesos:22717.99,usd:0,pagado:false},
+  {id:137,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"28/02/26",detalle:"MERPAGO*JUVIA",cuota:"03/06",pesos:20349.16,usd:0,pagado:false},
+  {id:138,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"12/03/26",detalle:"MERPAGO*FERA",cuota:"03/03",pesos:21837.81,usd:0,pagado:false},
+  {id:139,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"18/03/26",detalle:"DLO*FungiMelena",cuota:"03/03",pesos:41340,usd:0,pagado:false},
+  {id:140,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"30/03/26",detalle:"MERPAGO*BRTHARGENTINA",cuota:"02/03",pesos:17463.50,usd:0,pagado:false},
+  {id:141,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"03/04/26",detalle:"TM DOT",cuota:"02/03",pesos:14733.33,usd:0,pagado:false},
+  {id:142,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"10/04/26",detalle:"MERPAGO*PARFUMERIE",cuota:"02/09",pesos:49263.33,usd:0,pagado:false},
+  {id:143,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"21/04/26",detalle:"OPENPAY*POTENZA ROMINA (a)",cuota:"02/03",pesos:16666.66,usd:0,pagado:false},
+  {id:144,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"24/04/26",detalle:"OPENPAY*POTENZA ROMINA (b)",cuota:"02/03",pesos:16666.66,usd:0,pagado:false},
+  {id:145,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"30/04/26",detalle:"MERPAGO*LUISALBERTOGUATA",cuota:"–",pesos:1390.87,usd:0,pagado:false},
+  {id:146,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"30/04/26",detalle:"MERPAGO*CARNICERIA",cuota:"–",pesos:183130,usd:0,pagado:false},
+  {id:147,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"30/04/26",detalle:"FINCAS DEL SUR-FINCAS DE",cuota:"–",pesos:16597.42,usd:0,pagado:false},
+  {id:148,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"30/04/26",detalle:"SHEIN",cuota:"–",pesos:160275,usd:0,pagado:false},
+  {id:149,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"01/05/26",detalle:"APPLE.COM/BILL (a)",cuota:"–",pesos:0,usd:2.85,pagado:false},
+  {id:150,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"02/05/26",detalle:"RONDA-BARRA RONDA",cuota:"–",pesos:16400,usd:0,pagado:false},
+  {id:151,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"02/05/26",detalle:"FARMACITY411",cuota:"–",pesos:21070.23,usd:0,pagado:false},
+  {id:152,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"02/05/26",detalle:"STARBUCKS PANAMERICANA 1",cuota:"–",pesos:26600,usd:0,pagado:false},
+  {id:153,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"02/05/26",detalle:"DLO*DiDi (a)",cuota:"–",pesos:5920.33,usd:0,pagado:false},
+  {id:154,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"02/05/26",detalle:"DLO*DiDi (b)",cuota:"–",pesos:22940,usd:0,pagado:false},
+  {id:155,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"02/05/26",detalle:"WWW.CARREFOUR.COM.AR",cuota:"–",pesos:96798.16,usd:0,pagado:false},
+  {id:156,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"03/05/26",detalle:"AFIP VEP 1620573832",cuota:"–",pesos:72414.10,usd:0,pagado:false},
+  {id:157,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"06/05/26",detalle:"MERPAGO*PAULADEMARO (a)",cuota:"–",pesos:23537.80,usd:0,pagado:false},
+  {id:158,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"07/05/26",detalle:"MERPAGO*2GENOVESES",cuota:"–",pesos:39586.30,usd:0,pagado:false},
+  {id:159,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"08/05/26",detalle:"MERPAGO*PAGODEDEUDA",cuota:"–",pesos:585.73,usd:0,pagado:false},
+  {id:160,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"08/05/26",detalle:"DLO*DiDi (c)",cuota:"–",pesos:11259.11,usd:0,pagado:false},
+  {id:161,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"11/05/26",detalle:"PARFUMERIE (cuotas)",cuota:"01/03",pesos:14966.68,usd:0,pagado:false},
+  {id:162,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"11/05/26",detalle:"NATURA COSMETICOS",cuota:"–",pesos:42580,usd:0,pagado:false},
+  {id:163,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"12/05/26",detalle:"DLO*DIDI (d)",cuota:"–",pesos:6240,usd:0,pagado:false},
+  {id:164,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"13/05/26",detalle:"MERPAGO*PAULADEMARO (b)",cuota:"–",pesos:23537.80,usd:0,pagado:false},
+  {id:165,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"14/05/26",detalle:"MERPAGO*MARIANAINESSTERLI",cuota:"–",pesos:5349.50,usd:0,pagado:false},
+  {id:166,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"14/05/26",detalle:"PARFUMERIE 9 cuotas",cuota:"01/09",pesos:20355.60,usd:0,pagado:false},
+  {id:167,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"15/05/26",detalle:"APPLE.COM/BILL (b)",cuota:"–",pesos:0,usd:5.71,pagado:false},
+  {id:168,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"16/05/26",detalle:"APPLE.COM/BILL (c)",cuota:"–",pesos:0,usd:1.42,pagado:false},
+  {id:169,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"20/05/26",detalle:"MAXI AV SAN JUAN 3330",cuota:"–",pesos:34116.69,usd:0,pagado:false},
+  {id:170,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"27/05/26",detalle:"APPLE.COM/BILL (d)",cuota:"–",pesos:0,usd:0.99,pagado:false},
+  {id:171,tarjeta:"VISA Lucia (Galicia)",titular:"Kevin (adicional)",fecha:"28/05/26",detalle:"MAXI AV SAN JUAN 3330",cuota:"–",pesos:80867,usd:0,pagado:false},
+  {id:172,tarjeta:"VISA Lucia (Galicia)",titular:"Lucia",fecha:"30/11/25",detalle:"PAYU*AR*ADIDAS",cuota:"06/06",pesos:15499.70,usd:0,pagado:false}
+];
+
+// ═══ HELPERS ════════════════════════════════════════════════
+const fmt=n=>new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',minimumFractionDigits:2}).format(n);
+const fmtU=n=>n>0?`USD ${n.toFixed(2)}`:'';
+const fmtN=n=>n.toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:2});
+function safeEval(s){const c=s.replace(/,/g,'.').trim();if(!/^[\d\s\+\-\*\/\(\)\.]+$/.test(c))return NaN;try{return Function('"use strict";return('+c+')')();}catch{return NaN;}}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function mkId(){return`${currentYear}-${currentMonth}`;}
+function getItems(){return monthsData[mkId()]||[];}
+function setItems(arr){monthsData[mkId()]=arr;}
+function getDeleted(){return deletedData[mkId()]||[];}
+function setDeleted(arr){deletedData[mkId()]=arr;}
+function parseCuota(s){if(!s||s==='–'||s==='-')return null;const m=s.match(/^(\d+)\/(\d+)$/);if(!m)return null;return{cur:parseInt(m[1]),total:parseInt(m[2])};}
+function isLastCuota(s){const p=parseCuota(s);return p?p.cur===p.total:false;}
+function nextCuota(s){const p=parseCuota(s);if(!p)return s;return`${p.cur+1}/${p.total}`;}
+
+// ═══ MONTH NAV ══════════════════════════════════════════════
+function updateMonthDisplay(){document.getElementById('month-display').textContent=`${MONTHS_ES[currentMonth]} ${currentYear}`;}
+function changeMonth(dir){
+  currentMonth+=dir;
+  if(currentMonth<0){currentMonth=11;currentYear--;}
+  else if(currentMonth>11){currentMonth=0;currentYear++;}
+  if(dir===1&&!monthsData[mkId()])buildNextMonth();
+  if(!monthsData[mkId()])monthsData[mkId()]=[];
+  updateMonthDisplay();deletedOpen=false;renderResumen();renderTable();
+}
+function buildNextMonth(){
+  const pm=currentMonth===0?11:currentMonth-1;
+  const py=currentMonth===0?currentYear-1:currentYear;
+  const prev=monthsData[`${py}-${pm}`]||[];
+  monthsData[mkId()]=prev.filter(i=>parseCuota(i.cuota)&&!isLastCuota(i.cuota))
+    .map(i=>({...i,id:nextId++,pagado:false,cuota:nextCuota(i.cuota)}));
+}
+async function handleFile(inp){
+  const f=inp.files[0];
+  if(!f)return;
+  const n=document.getElementById('upload-note');
+  inp.value='';
+
+  // Mostrar la imagen en el panel Otra dentro de Gastos
+  if(f.type.startsWith('image/')){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=document.getElementById('otra-img-el');
+      if(img){ img.src=e.target.result; document.getElementById('otra-img-preview').style.display='block'; }
+    };
+    reader.readAsDataURL(f);
+  }
+
+  const isImg=f.type.startsWith('image/');
+  const isPdf=f.type==='application/pdf';
+  if(!isImg&&!isPdf){
+    n.textContent='⚠️ Solo se aceptan imágenes o PDFs';
+    setTimeout(()=>n.textContent='',4000);
+    return;
+  }
+
+  n.textContent='🔍 Leyendo con IA…';
+
+  try {
+    const base64=await new Promise((res,rej)=>{
+      const r=new FileReader();
+      r.onload=()=>res(r.result.split(',')[1]);
+      r.onerror=()=>rej(new Error('Error leyendo archivo'));
+      r.readAsDataURL(f);
+    });
+
+    const aiPrompt=`Sos un asistente que lee resúmenes de tarjetas de crédito y extractos bancarios argentinos.
+Analizá esta imagen y extraé TODOS los gastos/movimientos que encuentres.
+Respondé ÚNICAMENTE con un array JSON válido, sin texto adicional, sin markdown, sin backticks.
+Cada objeto debe tener exactamente estas claves:
+- detalle: string (descripción del gasto, tal como aparece)
+- pesos: number (monto en pesos argentinos, positivo. Si es en USD ponés 0)
+- usd: number (monto en dólares, positivo. Si es en pesos ponés 0)
+- cuota: string (ej "2/6" si tiene cuotas, o "" si es pago único)
+- titular: string (nombre del titular si se puede inferir, sino "")
+Ejemplo: [{"detalle":"MERPAGO*NETFLIX","pesos":15800,"usd":0,"cuota":"","titular":""},{"detalle":"APPLE.COM/BILL","pesos":0,"usd":2.99,"cuota":"","titular":""}]`;
+
+    const resp=await fetch('/.netlify/functions/ai-proxy',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ imageBase64:base64, mediaType:f.type, prompt:aiPrompt }),
+    });
+
+    if(!resp.ok){
+      const errData=await resp.json().catch(()=>({}));
+      throw new Error(`API error ${resp.status}: ${errData?.error?.message||''}`);
+    }
+    const data=await resp.json();
+    const clean=(data.candidates?.[0]?.content?.parts?.[0]?.text||'').replace(/```json|```/g,'').trim();
+    const gastos=JSON.parse(clean);
+
+    if(!Array.isArray(gastos)||gastos.length===0){
+      n.textContent='⚠️ No se encontraron gastos en la imagen';
+      setTimeout(()=>n.textContent='',4000);
+      return;
+    }
+
+    // Cargar en la lista temporal de la solapa Otra (no directo a gastos)
+    gastos.forEach(g=>{
+      otraGastos.push({
+        id: otraNextId++,
+        detalle: g.detalle||'Sin descripción',
+        pesos:   parseFloat(g.pesos)||0,
+        usd:     parseFloat(g.usd)||0,
+        cuota:   g.cuota||'–',
+        titular: g.titular||'',
+        destino: 'VISA Kevin (BBVA)',
+      });
+    });
+
+    otraRenderLista();
+    n.textContent=`✓ ${gastos.length} gastos detectados — revisalos abajo en Gastos del mes`;
+    setTimeout(()=>n.textContent='',6000);
+
+    // Ir a la solapa Gastos automáticamente
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.getElementById('sec-gastos').classList.add('active');
+    const gastosTab=[...document.querySelectorAll('.tab')].find(t=>t.textContent.trim()==='Gastos del mes');
+    if(gastosTab) gastosTab.classList.add('active');
+    // Scroll al panel de Otra
+    setTimeout(()=>{
+      const p=document.getElementById('otra-panel');
+      if(p) p.scrollIntoView({behavior:'smooth',block:'start'});
+    },200);
+
+  } catch(e){
+    console.error('handleFile error:',e);
+    n.textContent=`⚠️ Error: ${e.message}`;
+    setTimeout(()=>n.textContent='',6000);
+  }
+}
+
+// ═══ DÓLAR — Galicia (fuente: galicia.ar + APIs, compra/venta en beige) ═══
+async function fetchDolar(){
+  const label=document.getElementById('dolar-label');
+  const vals=document.getElementById('dolar-vals');
+  // Aplica valores (actualiza todo)
+  function apply(c,v,src){
+    dolarCompra=c;dolarVenta=v;
+    label.textContent=`Dólar Banco Galicia`;
+    vals.innerHTML=`<span>Compra <strong>$${fmtN(c)}</strong></span><span>Venta <strong>$${fmtN(v)}</strong></span>`;
+    renderResumen();
+  }
+  // Intenta API dinámicas — oficial BNA → dolarapi (galicia da 404)
+  const sources=[
+    {url:'https://api.argentinadatos.com/v1/cotizaciones/dolares/oficial',isArr:true},
+    {url:'https://dolarapi.com/v1/dolares/oficial',isArr:false},
+  ];
+  for(const s of sources){
+    try{
+      const r=await fetch(s.url,{signal:AbortSignal.timeout(4000)});
+      if(!r.ok)continue;
+      const d=await r.json();
+      const obj=s.isArr?(Array.isArray(d)?d[d.length-1]:d):d;
+      const c=parseFloat(obj.compra||obj.casa?.compra);
+      const v=parseFloat(obj.venta||obj.casa?.venta);
+      if(!v||v<800||v>5000)continue; // rango razonable
+      apply(c,v,s.url);return;
+    }catch{}
+  }
+  // Fallback: valores confirmados hoy 02/06/2026 (captura de pantalla del usuario)
+  apply(1395,1445,'fallback');
+}
+
+// Actualizar cotización automáticamente una vez por día
+(function scheduleUpdate(){
+  const lastFetch=parseInt(localStorage.getItem('dolar_fetch_ts')||'0');
+  const now=Date.now();
+  if(now-lastFetch>1000*60*60*8){// si pasaron más de 8h, actualizar
+    localStorage.setItem('dolar_fetch_ts',String(now));
+    fetchDolar();
+  }else{
+    // usar valores guardados si existen
+    const c=parseFloat(localStorage.getItem('dolar_c')||'0');
+    const v=parseFloat(localStorage.getItem('dolar_v')||'0');
+    if(v>800){dolarCompra=c;dolarVenta=v;
+      document.getElementById('dolar-vals').innerHTML=`<span>Compra <strong>$${fmtN(c)}</strong></span><span>Venta <strong>$${fmtN(v)}</strong></span>`;
+      renderResumen();
+    }else{fetchDolar();}
+  }
+})();
+
+// ═══ RESUMEN — totales 100% dinámicos desde gastos activos ══
+function renderResumen(){
+  const items=getItems();
+  const monthReal=getSummaryReal();
+  const hasRealData=Object.keys(monthReal).length>0;
+  const byCard={};
+  Object.keys(TARJETA_META).forEach(k=>{byCard[k]={pesos:0,usd:0,count:0};});
+  items.forEach(i=>{
+    if(!byCard[i.tarjeta])byCard[i.tarjeta]={pesos:0,usd:0,count:0};
+    byCard[i.tarjeta].pesos+=i.pesos;
+    byCard[i.tarjeta].usd+=i.usd;
+    byCard[i.tarjeta].count++;
+  });
+  const customSources=[...new Set(items.map(i=>i.tarjeta))].filter(k=>!TARJETA_META[k]);
+  const order=["VISA Kevin (BBVA)","MC Lucia (Galicia)","VISA Lucia (Galicia)","Mercado Pago",...customSources];
+  const loadBanner=!hasRealData?`<div style="background:#fff8ee;border:1px solid #e8c88a;border-radius:8px;padding:12px 18px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;grid-column:1/-1"><span style="font-size:12px;color:var(--warm2)">⚠️ No hay totales del resumen para <strong>${MONTHS_ES[currentMonth]} ${currentYear}</strong>.</span><button class="btn btn-p" onclick="openLoadTotalsModal()">Cargar totales del mes</button></div>`:'';
+  document.getElementById('resumen-cards').innerHTML=loadBanner+order.map(k=>{
+    const m=TARJETA_META[k]||{dot:'#a0856a',label:k,color:'#a0856a'};
+    const t=byCard[k]||{pesos:0,usd:0,count:0};
+    const real=monthReal[k];
+    const minPago=real?.minPago||0;
+    const isCustomOrNoReal=!TARJETA_META[k]||k==='Mercado Pago'||!real;
+    const delCard=getDeleted().filter(i=>i.tarjeta===k);
+    const deletedPesos=delCard.reduce((a,i)=>a+i.pesos,0);
+    const deletedUsd=delCard.reduce((a,i)=>a+i.usd,0);
+    const displayTotal=isCustomOrNoReal?t.pesos:(real.total||0)-deletedPesos;
+    const displayUsd=isCustomOrNoReal?t.usd:(real.usd||0)-deletedUsd;
+    return`<div class="card" style="border-top:4px solid ${m.color}">
+      <div style="font-size:10px;color:${m.color};letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;font-weight:600">${m.label}</div>
+      <div class="lb res-total">${fmt(displayTotal)}</div>
+      ${displayUsd>0?`<div style="font-size:11px;color:var(--muted);margin-top:3px">${fmtU(displayUsd)}${dolarVenta?` · ≈ ${fmt(displayUsd*dolarVenta)}`:''}</div>`:''}
+      <div class="stat-bar">
+        <span style="font-size:11px;color:var(--muted)">${t.count} mov.</span>
+        ${minPago>0?`<span style="font-size:11px;color:var(--muted)">Mín. <strong style="color:var(--danger)">${fmt(minPago)}</strong></span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  const delAll=getDeleted();
+  const allSources=[...new Set([...Object.keys(monthReal),...items.map(i=>i.tarjeta)])];
+  const gP=allSources.reduce((a,k)=>{
+    const noReal=!TARJETA_META[k]||k==='Mercado Pago'||!monthReal[k];
+    if(noReal) return a+(byCard[k]?.pesos||0);
+    const deleted=delAll.filter(i=>i.tarjeta===k).reduce((s,i)=>s+i.pesos,0);
+    return a+(monthReal[k].total||0)-deleted;
+  },0);
+  const gU=allSources.reduce((a,k)=>{
+    const noReal=!TARJETA_META[k]||k==='Mercado Pago'||!monthReal[k];
+    if(noReal) return a+(byCard[k]?.usd||0);
+    const deleted=delAll.filter(i=>i.tarjeta===k).reduce((s,i)=>s+i.usd,0);
+    return a+(monthReal[k].usd||0)-deleted;
+  },0);
+  const minTotal=Object.values(monthReal).reduce((a,s)=>a+(s.minPago||0),0);
+  document.getElementById('grand-total-card').innerHTML=`
+    <div>
+      <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Total — ${MONTHS_ES[currentMonth]} ${currentYear}</div>
+      <div class="lb" style="font-size:32px;font-weight:700;color:var(--text)">${fmt(gP)}</div>
+      ${gU>0?`<div style="font-size:12px;color:var(--muted);margin-top:2px">${fmtU(gU)} · ≈ ${fmt(gU*dolarVenta)}</div>`:''}
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Pago mínimo total</div>
+      <div class="lb" style="font-size:24px;font-style:italic;color:var(--danger)">${fmt(minTotal)}</div>
+    </div>`;
+  document.getElementById('mov-count').textContent=items.length;
+}
+
+
+// ═══ TABS ════════════════════════════════════════════════════
+function showTab(name,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='gastos')renderTable();
+  if(name==='extras')renderExtras();
+  if(name==='debehaber')renderDH();
+  if(name==='ahorro')renderAhorro();
+  if(name==='deudacasa'){renderDcTotalCard();renderDcPagos();const d=document.getElementById('dc-fecha');if(!d.value)d.value=new Date().toISOString().slice(0,10);}
+  if(name==='otra'){otraRenderLista();}
+}
+function updateExtraPills(){
+  const known=['VISA Kevin (BBVA)','MC Lucia (Galicia)','VISA Lucia (Galicia)','Mercado Pago'];
+  const items=getItems();
+  const extras=[...new Set(items.map(i=>i.tarjeta).filter(t=>!known.includes(t)))];
+  const container=document.getElementById('extra-pills');
+  if(!container)return;
+  container.innerHTML=extras.map(t=>{
+    const active=currentFilter===t?' active':'';
+    return`<button class="pill${active}" onclick="setFilter('${t.replace(/'/g,"\\'")}',this)">${esc(t)}</button>`;
+  }).join('');
+}
+function setFilter(v,btn){currentFilter=v;document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));if(btn)btn.classList.add('active');renderTable();}
+function setSearch(v){currentSearch=v;renderTable();}
+function getVisible(){
+  const sp=document.getElementById('show-paid-cb').checked;
+  const list=getItems().filter(i=>{
+    if(currentFilter!=='Todas'&&i.tarjeta!==currentFilter)return false;
+    if(currentSearch){const s=currentSearch.toLowerCase();if(!i.detalle.toLowerCase().includes(s)&&!i.titular.toLowerCase().includes(s))return false;}
+    if(!sp&&i.pagado)return false;
+    return true;
+  });
+  // Ordenar: cuotas restantes ascendente (las que terminan antes, arriba); sin cuota al final
+  return list.sort((a,b)=>{
+    const pa=parseCuota(a.cuota), pb=parseCuota(b.cuota);
+    const remA=pa?pa.total-pa.cur:Infinity;
+    const remB=pb?pb.total-pb.cur:Infinity;
+    return remA-remB;
+  });
+}
+
+// ═══ ADD GASTO ═══════════════════════════════════════════════
+function toggleOtraFuente(sel){
+  const inp=document.getElementById('nw-otra-fuente');
+  inp.style.display=sel.value==='__otra__'?'block':'none';
+  if(sel.value==='__otra__')inp.focus();
+}
+function addGasto(){
+  const det=document.getElementById('nw-detalle').value.trim();
+  if(!det){alert('Ingresá un detalle.');return;}
+  const selVal=document.getElementById('nw-tarjeta').value;
+  const tarjeta=selVal==='__otra__'
+    ?(document.getElementById('nw-otra-fuente').value.trim()||'Otra')
+    :selVal;
+  const item={id:nextId++,tarjeta,
+    titular:document.getElementById('nw-titular').value||'–',
+    fecha:new Date().toLocaleDateString('es-AR'),
+    detalle:det,cuota:document.getElementById('nw-cuota').value||'–',
+    pesos:parseFloat(document.getElementById('nw-pesos').value)||0,
+    usd:parseFloat(document.getElementById('nw-usd').value)||0,pagado:false};
+  setItems([...getItems(),item]);
+  ['nw-detalle','nw-titular','nw-pesos','nw-usd','nw-cuota','nw-otra-fuente'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('nw-otra-fuente').style.display='none';
+  renderTable();renderResumen();
+}
+
+// ═══ TABLE ═══════════════════════════════════════════════════
+function renderTable(){
+  const vis=getVisible();
+  const paid=vis.filter(i=>i.pagado).length;
+  document.getElementById('paid-count').textContent=paid>0?paid+' pagados':'';
+  document.getElementById('mov-count').textContent=getItems().length;
+
+  const del=getDeleted();
+  const dw=document.getElementById('deleted-wrap-el');
+  if(del.length>0){
+    dw.innerHTML=`<div class="deleted-wrap">
+      <div class="deleted-toggle" onclick="toggleDeleted()">
+        <span class="deleted-arrow ${deletedOpen?'open':''}">▶</span>
+        <span style="font-size:11px;color:var(--danger);font-weight:600;letter-spacing:.1em;text-transform:uppercase">Eliminados (${del.length})</span>
+        <span style="font-size:11px;color:var(--muted);margin-left:4px">— clic para ${deletedOpen?'ocultar':'mostrar'}</span>
+      </div>
+      <div class="deleted-body ${deletedOpen?'open':''}">
+        ${del.map(it=>`<div class="deleted-row">
+          <span style="color:var(--muted);font-size:12px">${esc(it.detalle)}</span>
+          <span style="display:flex;gap:12px;align-items:center">
+            <span style="color:var(--danger);font-size:12px">${it.pesos!==0?fmt(it.pesos):fmtU(it.usd)}</span>
+            <button class="btn btn-g" onclick="restoreItem(${it.id})">Restaurar</button>
+          </span>
+        </div>`).join('')}
+      </div></div>`;
+  }else dw.innerHTML='';
+
+  document.getElementById('gastos-tbody').innerHTML=vis.map(item=>{
+    const m=TARJETA_META[item.tarjeta]||{dot:'#aaa',label:item.tarjeta};
+    const isEd=editingId===item.id,isOp=opRowId===item.id;
+    const pc=item.pagado?' paid':'';
+    const lastC=isLastCuota(item.cuota);
+    const cuotaDisp=lastC?`<span style="color:var(--warm1);font-weight:600">${esc(item.cuota)}★</span>`:esc(item.cuota);
+    let dTd=isEd?`<input value="${esc(item.detalle)}" oninput="setEdit(${item.id},'detalle',this.value)" style="width:100%">`:esc(item.detalle);
+    let tTd=isEd?`<input value="${esc(item.titular)}" oninput="setEdit(${item.id},'titular',this.value)" style="width:100px">`:esc(item.titular);
+    let cTd=isEd?`<input value="${esc(item.cuota)}" oninput="setEdit(${item.id},'cuota',this.value)" style="width:52px;text-align:center">`:cuotaDisp;
+    let pTd=isEd?`<input type="number" value="${item.pesos}" oninput="setEdit(${item.id},'pesos',this.value)" style="width:100px;text-align:right">`:(item.pesos!==0?fmt(item.pesos):'–');
+    let uTd=isEd?`<input type="number" value="${item.usd}" oninput="setEdit(${item.id},'usd',this.value)" style="width:65px;text-align:right">`:fmtU(item.usd);
+    let actions='';
+    if(isEd){actions=`<div class="row-actions"><button class="btn btn-s" onclick="saveEdit(${item.id})">Guardar</button><button class="btn btn-p" onclick="cancelEdit()">✕</button></div>`;}
+    else if(isOp){actions=`<div class="op-row"><select id="op-type-${item.id}" style="width:40px;padding:3px"><option value="/">÷</option><option value="*">×</option></select><input type="number" id="op-val-${item.id}" placeholder="val" style="width:65px"><button class="btn btn-s" onclick="applyOp(${item.id})">=</button><button class="btn btn-p" onclick="cancelOp()">✕</button></div>`;}
+    else{actions=`<div class="row-actions">
+      ${opMode?'':`<button class="btn btn-dup" title="Enviar a Debe/Haber" onclick="openDupModal(${item.id})">⇄ D/H</button>`}
+      ${opMode?'':`<button class="btn btn-p" title="Dividir o multiplicar" onclick="startOp(${item.id})">÷×</button>`}
+      <button class="btn btn-p" onclick="startEdit(${item.id})">Editar</button>
+      <button class="btn btn-d" onclick="deleteItem(${item.id})">✕</button>
+    </div>`;
+    }
+    // Selector de fuente para modo edición
+    const allSources=[...Object.keys(TARJETA_META),...new Set(getItems().map(i=>i.tarjeta).filter(t=>!TARJETA_META[t]))];
+    const sourceSel=isEd
+      ?`<select onchange="setEdit(${item.id},'tarjeta',this.value)" style="font-size:11px;max-width:130px">${allSources.map(s=>`<option value="${esc(s)}" ${s===item.tarjeta?'selected':''}>${esc(TARJETA_META[s]?.label||s)}</option>`).join('')}</select>`
+      :`<div class="tag-row"><span class="dot" style="background:${m.dot}"></span>${m.label}</div>`;
+    const isSel=selectedIds.has(item.id);
+    const isOpSel=opSelectedIds.has(item.id);
+    const rowBg=isSel?'background:#f0e8e0;':isOpSel?'background:#fff8ee;':'';
+    return`<tr class="data-row${pc}" style="${rowBg}" data-opid="${item.id}">
+      <td class="c">${opMode
+        ?`<input type="checkbox" ${isOpSel?'checked':''} onchange="toggleOpSelect(${item.id},this.checked)" style="accent-color:var(--warm2)">`
+        :`<input type="checkbox" ${isSel?'checked':''} onchange="toggleSelect(${item.id},this.checked)" style="accent-color:var(--warm1)">`
+      }</td>
+      <td class="c"><input type="checkbox" ${item.pagado?'checked':''} onchange="togglePaid(${item.id})"></td>
+      <td>${sourceSel}</td>
+      <td style="color:var(--muted)">${tTd}</td>
+      <td style="color:var(--muted);white-space:nowrap">${item.fecha}</td>
+      <td style="color:${item.pesos<0?'var(--ok)':'var(--text)'}">${dTd}</td>
+      <td class="r" style="color:var(--muted)">${cTd}</td>
+      <td class="r" style="color:${item.pesos<0?'var(--ok)':'var(--text)'}">${pTd}</td>
+      <td class="r" style="color:var(--muted)">${uTd}</td>
+      <td>${actions}</td></tr>`;
+  }).join('');
+
+  const tP=vis.reduce((a,i)=>a+i.pesos,0),tU=vis.reduce((a,i)=>a+i.usd,0);
+  // Update bulk bar
+  const bb=document.getElementById('bulk-bar');
+  if(selectedIds.size>0){bb.style.display='flex';document.getElementById('bulk-count').textContent=selectedIds.size+' gasto'+(selectedIds.size!==1?'s':'')+' seleccionado'+(selectedIds.size!==1?'s':'');}
+  else{bb.style.display='none';}
+  // Update select-all checkbox
+  const saCb=document.getElementById('sel-all-cb');
+  if(saCb){saCb.checked=vis.length>0&&vis.every(i=>selectedIds.has(i.id));saCb.indeterminate=selectedIds.size>0&&!saCb.checked;}
+  document.getElementById('gastos-tfoot').innerHTML=`<tr>
+    <td colspan="6" style="color:var(--muted);font-size:11px;letter-spacing:.08em">${vis.length} movimientos · ${paid} pagados</td>
+    <td class="r" style="font-weight:600;color:var(--text);font-size:13px">${fmt(tP)}</td>
+    <td class="r" style="color:var(--muted)">${tU>0?fmtU(tU):'–'}</td><td></td></tr>`;
+  updateExtraPills();
+}
+
+function toggleDeleted(){deletedOpen=!deletedOpen;renderTable();}
+function startEdit(id){editingId=id;opRowId=null;editBuffer={...getItems().find(i=>i.id===id)};renderTable();}
+function setEdit(id,f,v){editBuffer[f]=v;}
+function saveEdit(id){setItems(getItems().map(i=>i.id===id?{...editBuffer,pesos:parseFloat(editBuffer.pesos)||0,usd:parseFloat(editBuffer.usd)||0}:i));editingId=null;renderTable();renderResumen();}
+function cancelEdit(){editingId=null;renderTable();}
+function startOp(id){opRowId=id;editingId=null;renderTable();}
+function cancelOp(){opRowId=null;renderTable();}
+function applyOp(id){
+  const t=document.getElementById('op-type-'+id).value;
+  const v=parseFloat(document.getElementById('op-val-'+id).value);
+  if(isNaN(v)||v===0){cancelOp();return;}
+  setItems(getItems().map(i=>{if(i.id!==id)return i;return{...i,pesos:Math.round((t==='/'?i.pesos/v:i.pesos*v)*100)/100,usd:Math.round((t==='/'?i.usd/v:i.usd*v)*100)/100};}));
+  opRowId=null;renderTable();renderResumen();
+}
+function deleteItem(id){const item=getItems().find(i=>i.id===id);setDeleted([...getDeleted(),item]);setItems(getItems().filter(i=>i.id!==id));if(editingId===id)editingId=null;renderTable();renderResumen();}
+function restoreItem(id){const item=getDeleted().find(i=>i.id===id);setItems([...getItems(),item].sort((a,b)=>a.id-b.id));setDeleted(getDeleted().filter(i=>i.id!==id));renderTable();renderResumen();}
+function togglePaid(id){setItems(getItems().map(i=>i.id===id?{...i,pagado:!i.pagado}:i));renderTable();}
+function openDupModal(id){dupItemId=id;const item=getItems().find(i=>i.id===id);if(!item)return;document.getElementById('dup-concepto').textContent=item.detalle;const amount=item.pesos!==0?item.pesos:item.usd*dolarVenta;document.getElementById('dup-monto').textContent=item.pesos!==0?fmt(item.pesos):fmtU(item.usd);document.getElementById('dup-amount').value=Math.round(amount*100)/100;document.getElementById('dup-modal').classList.add('open');}
+function closeDupModal(){document.getElementById('dup-modal').classList.remove('open');dupItemId=null;}
+function confirmDup(){const item=getItems().find(i=>i.id===dupItemId);if(!item){closeDupModal();return;}dhRows=[...dhRows,{id:nextId++,concepto:item.detalle,dir:document.getElementById('dup-dir').value,monto:String(parseFloat(document.getElementById('dup-amount').value)||0)}];closeDupModal();renderDH();// Show subtle toast without navigating
+const toast=document.createElement('div');toast.textContent='✓ Enviado a Debe & Haber';toast.style.cssText='position:fixed;bottom:24px;right:24px;background:var(--ok);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-family:Jost,sans-serif;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.18);';document.body.appendChild(toast);setTimeout(()=>toast.remove(),2500);}
+document.getElementById('dup-modal').addEventListener('click',function(e){if(e.target===this)closeDupModal();});
+function toggleSelect(id,checked){if(checked)selectedIds.add(id);else selectedIds.delete(id);renderTable();}
+function toggleSelectAll(checked){const vis=getVisible();if(checked)vis.forEach(i=>selectedIds.add(i.id));else selectedIds.clear();renderTable();}
+function clearSelection(){selectedIds.clear();renderTable();}
+function startBulkOp(){
+  // Mover seleccionados a opSelectedIds y activar opMode
+  opSelectedIds=new Set(selectedIds);
+  selectedIds.clear();
+  opMode=true;
+  renderTable();
+}
+function bulkSendDH(){
+  const dir=document.getElementById('bulk-dir').value;
+  const items=getItems().filter(i=>selectedIds.has(i.id));
+  items.forEach(item=>{
+    const monto=item.pesos!==0?item.pesos:Math.round(item.usd*dolarVenta*100)/100;
+    dhRows=[...dhRows,{id:nextId++,concepto:item.detalle,dir,monto:String(monto)}];
+  });
+  selectedIds.clear();
+  renderTable();
+  renderDH();
+  // Show brief confirmation without navigating away
+  const bb=document.getElementById('bulk-bar');
+  bb.style.display='flex';
+  const cnt=document.getElementById('bulk-count');
+  const prev=cnt.textContent;
+  cnt.textContent='✓ '+items.length+' gasto'+(items.length!==1?'s':'')+' enviado'+(items.length!==1?'s':'')+' a Debe & Haber';
+  bb.style.background='var(--ok-l)';
+  setTimeout(()=>{bb.style.display='none';bb.style.background='';},2500);
+}
+function toggleOpMode(){
+  opMode=!opMode;
+  opSelectedIds.clear();
+  const btn=document.getElementById('op-mode-btn');
+  if(btn){btn.style.background=opMode?'var(--warm2)':'#fff8ee';btn.style.color=opMode?'#fff':'var(--warm2)';}
+  renderTable();
+}
+function toggleOpSelect(id,checked){
+  if(checked)opSelectedIds.add(id);else opSelectedIds.delete(id);
+  // Update op-bulk-bar
+  const bar=document.getElementById('op-bulk-bar');
+  const cnt=document.getElementById('op-bulk-count');
+  if(opSelectedIds.size>0){bar.style.display='flex';cnt.textContent=opSelectedIds.size+' ítem'+(opSelectedIds.size!==1?'s':'')+' seleccionado'+(opSelectedIds.size!==1?'s':'');}
+  else bar.style.display='none';
+  // update row highlight without full re-render
+  document.querySelectorAll('[data-opid]').forEach(row=>{
+    const rid=parseInt(row.getAttribute('data-opid'));
+    row.style.background=opSelectedIds.has(rid)?'#fff8ee':'';
+  });
+}
+function applyBulkOp(){
+  const t=document.getElementById('op-bulk-type').value;
+  const v=parseFloat(document.getElementById('op-bulk-val').value);
+  if(isNaN(v)||v===0){alert('Ingresá un valor válido.');return;}
+  setItems(getItems().map(i=>{
+    if(!opSelectedIds.has(i.id))return i;
+    let p=i.pesos,u=i.usd;
+    if(t==='/')    {p=Math.round(p/v*100)/100;u=Math.round(u/v*100)/100;}
+    else if(t==='*'){p=Math.round(p*v*100)/100;u=Math.round(u*v*100)/100;}
+    else if(t==='+'){p=Math.round((p+v)*100)/100;}
+    else if(t==='-'){p=Math.round((p-v)*100)/100;}
+    return{...i,pesos:p,usd:u};
+  }));
+  opSelectedIds.clear();
+  document.getElementById('op-bulk-bar').style.display='none';
+  document.getElementById('op-bulk-val').value='';
+  renderTable();renderResumen();
+}
+function cancelBulkOp(){
+  opMode=false;opSelectedIds.clear();
+  const btn=document.getElementById('op-mode-btn');
+  if(btn){btn.style.background='#fff8ee';btn.style.color='var(--warm2)';}
+  document.getElementById('op-bulk-bar').style.display='none';
+  renderTable();
+}
+function toggleDhRows(){
+  const wrap=document.getElementById('dh-rows-wrap');
+  const btn=document.getElementById('dh-toggle-btn');
+  const isOpen=wrap.style.display!=='none';
+  wrap.style.display=isOpen?'none':'block';
+  btn.textContent=isOpen?'▼ Expandir':'▲ Contraer';
+}
+
+function addSalario(){
+  const quien=document.getElementById('sal-quien').value.trim();
+  const monto=parseFloat(document.getElementById('sal-monto').value)||0;
+  const desc=document.getElementById('sal-desc').value.trim();
+  if(!quien||monto<=0){alert('Ingresá el titular y el monto.');return;}
+  salarios=[...salarios,{id:nextId++,quien,monto,desc}];
+  ['sal-quien','sal-monto','sal-desc'].forEach(id=>document.getElementById(id).value='');
+  renderExtras();
+}
+function deleteSalario(id){salarios=salarios.filter(s=>s.id!==id);renderExtras();}
+
+function renderExtras(){
+  renderExtrasSalarios();
+  renderExtrasGrid();
+  renderExtrasSummary();
+}
+
+function renderExtrasSalarios(){
+  const sl=document.getElementById('salarios-lista');
+  if(!sl)return;
+  if(salarios.length===0){
+    sl.innerHTML='<div style="font-size:12px;color:var(--muted);padding:4px 0">Todavía no hay sueldos cargados.</div>';
+  } else {
+    sl.innerHTML=salarios.map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <span style="font-weight:600;font-size:13px">${esc(s.quien)}</span>
+        ${s.desc?`<span style="font-size:11px;color:var(--muted);margin-left:8px">${esc(s.desc)}</span>`:''}
+      </div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <span class="lb" style="font-size:16px;font-weight:700;color:var(--ok)">${fmt(s.monto)}</span>
+        <button class="btn btn-d" style="padding:3px 8px;font-size:10px" onclick="deleteSalario(${s.id})">&#x2715;</button>
+      </div>
+    </div>`).join('');
+  }
+}
+
+function renderExtrasGrid(){
+  const grid=document.getElementById('extras-grid');
+  if(!grid)return;
+  grid.innerHTML=extras.map(e=>{
+    const r=safeEval(e.formula);const ok=!isNaN(r);
+    return`<div class="card" style="position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-weight:600">${esc(e.label)}</div>
+        <button class="btn btn-d" style="padding:2px 7px;font-size:10px" onclick="deleteExtra(${e.id})">&#x2715;</button>
+      </div>
+      <input id="extra-inp-${e.id}" value="${esc(e.formula)}" placeholder="Ej: 200000 + 50000"
+        oninput="updateExtraLive(${e.id},this.value)"
+        style="width:100%;margin-bottom:6px">
+      ${e.formula?`<div class="extra-result lb" style="color:${ok?'var(--ok)':'var(--danger)'}">${ok?fmt(r):'Fórmula inválida'}</div>`:''}
+    </div>`;
+  }).join('')+`<div class="add-card" onclick="addExtra()"><span style="font-size:26px;color:var(--muted)">+</span><span style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:600">Agregar</span></div>`;
+}
+
+function updateExtraLive(id,val){
+  extras=extras.map(e=>e.id===id?{...e,formula:val,result:safeEval(val)||0}:e);
+  const r=safeEval(val);const ok=!isNaN(r);
+  const inp=document.getElementById('extra-inp-'+id);
+  if(inp){
+    const card=inp.closest('.card');
+    if(card){
+      let res=card.querySelector('.extra-result');
+      if(val){
+        if(!res){res=document.createElement('div');res.className='extra-result lb';card.appendChild(res);}
+        res.style.color=ok?'var(--ok)':'var(--danger)';
+        res.textContent=ok?fmt(r):'Fórmula inválida';
+      } else {if(res)res.remove();}
+    }
+  }
+  renderExtrasSummary();
+}
+
+function renderExtrasSummary(){
+  const totalSalarios=salarios.reduce((a,s)=>a+s.monto,0);
+  const totalExtras=extras.reduce((a,e)=>a+(isNaN(safeEval(e.formula))?0:safeEval(e.formula)),0);
+  const totalIngresos=totalSalarios+totalExtras;
+  const gastoTotal=getItems().reduce((a,i)=>a+i.pesos,0);
+  const totalFinal=totalIngresos-gastoTotal;
+  const sum=document.getElementById('extras-summary');
+  if(!sum)return;
+  if(totalIngresos>0){
+    sum.innerHTML=`<div class="card" style="border-left:5px solid var(--ok);padding:0;overflow:hidden;margin-top:6px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr)">
+        <div style="padding:20px 22px;background:var(--ok-l);border-right:1px solid var(--border)">
+          <div style="font-size:10px;color:var(--ok);letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:6px">Total ingresos</div>
+          <div class="lb" style="font-size:26px;font-weight:700;color:var(--ok)">${fmt(totalIngresos)}</div>
+          ${totalSalarios>0&&totalExtras>0?`<div style="font-size:11px;color:var(--muted);margin-top:4px">Sueldo ${fmt(totalSalarios)} + extra ${fmt(totalExtras)}</div>`:(totalSalarios>0?`<div style="font-size:11px;color:var(--muted);margin-top:4px">Sueldo: ${fmt(totalSalarios)}</div>`:'')}
+        </div>
+        <div style="padding:20px 22px;background:var(--danger-l);border-right:1px solid var(--border)">
+          <div style="font-size:10px;color:var(--danger);letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:6px">Total deuda</div>
+          <div class="lb" style="font-size:26px;font-weight:700;color:var(--danger)">${fmt(gastoTotal)}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Gastos del mes activos</div>
+        </div>
+        <div style="padding:20px 22px;background:${totalFinal>=0?'var(--ok-l)':'var(--danger-l)'}">
+          <div style="font-size:10px;color:${totalFinal>=0?'var(--ok)':'var(--danger)'};letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:6px">Total final</div>
+          <div class="lb" style="font-size:26px;font-weight:700;color:${totalFinal>=0?'var(--ok)':'var(--danger)'}">${fmt(totalFinal)}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">${totalFinal>=0?'Te sobra este mes':'Te falta este mes'}</div>
+        </div>
+      </div>
+    </div>`;
+  } else {
+    sum.innerHTML='';
+  }
+}
+function updateExtra(id,val){extras=extras.map(e=>e.id===id?{...e,formula:val,result:safeEval(val)||0}:e);renderExtras();}
+function addExtra(){extras=[...extras,{id:Date.now(),label:'Nuevo',formula:'',result:0}];renderExtras();}
+function addDhRow(){dhRows=[...dhRows,{id:nextId++,concepto:'',dir:'L→K',monto:''}];renderDH();}
+function updateDhRow(id,f,v){dhRows=dhRows.map(r=>r.id===id?{...r,[f]:v}:r);renderDHResult();}
+function removeDhRow(id){dhRows=dhRows.filter(r=>r.id!==id);renderDH();}
+function renderDH(){
+  document.getElementById('dh-rows').innerHTML=dhRows.map(r=>`<div class="dh-grid">
+    <input value="${esc(r.concepto)}" placeholder="Concepto"
+      oninput="updateDhRowLive(${r.id},'concepto',this.value)" style="width:100%">
+    <select onchange="updateDhRow(${r.id},'dir',this.value)" style="width:100%">
+      <option value="L\u2192K" ${r.dir==='L\u2192K'?'selected':''}>Lucia \u2192 Kevin</option>
+      <option value="K\u2192L" ${r.dir==='K\u2192L'?'selected':''}>Kevin \u2192 Lucia</option>
+    </select>
+    <input type="number" value="${r.monto}" placeholder="0"
+      oninput="updateDhRowLive(${r.id},'monto',this.value)"
+      style="text-align:right;width:100%">
+    <button class="btn btn-d" style="padding:4px 8px" onclick="removeDhRow(${r.id})">&#x2715;</button>
+  </div>`).join('');
+  renderDHResult();
+}
+function updateDhRowLive(id,f,v){dhRows=dhRows.map(r=>r.id===id?{...r,[f]:v}:r);renderDHResult();}
+function renderDHResult(){const lk=dhRows.filter(r=>r.dir==='L→K').reduce((a,r)=>a+(parseFloat(r.monto)||0),0);const kl=dhRows.filter(r=>r.dir==='K→L').reduce((a,r)=>a+(parseFloat(r.monto)||0),0);const net=lk-kl;const res=document.getElementById('dh-result');if(dhRows.length===0){res.innerHTML=`<div class="empty-state"><div style="font-size:36px;margin-bottom:10px;color:var(--border)">—</div><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:500">No hay conceptos aún.</div></div>`;return;}res.innerHTML=`<div class="card" style="border-top:4px solid var(--warm2)"><div class="dh-result-grid"><div><div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:600">Lucia debe a Kevin</div><div class="dh-amount" style="color:${lk>0?'var(--danger)':'var(--muted)'}">${fmt(lk)}</div></div><div style="color:var(--border);font-size:24px">⇄</div><div><div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:600">Kevin debe a Lucia</div><div class="dh-amount" style="color:${kl>0?'var(--danger)':'var(--muted)'}">${fmt(kl)}</div></div></div><div class="dh-final"><div style="font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;font-weight:600">Saldo neto</div><div class="dh-net" style="color:${Math.abs(net)===0?'var(--ok)':'var(--danger)'}">${fmt(Math.abs(net))}</div><div style="font-size:13px;color:var(--text);margin-top:8px">${net===0?'Están al día':net>0?'Lucia le debe a Kevin':'Kevin le debe a Lucia'}</div></div></div>`;}
+function toggleAhorroCotiz(){
+  const isUsd=document.getElementById('ah-moneda').value==='USD';
+  const box=document.getElementById('ah-cotiz-box');
+  box.style.display=isUsd?'block':'none';
+  if(isUsd&&dolarVenta){
+    const tc=document.getElementById('ah-tc');
+    if(!tc.value)tc.value=dolarVenta;
+  }
+}
+function addAhorro(){const dest=document.getElementById('ah-destino').value.trim();if(!dest){alert('Ingresá un destino.');return;}const moneda=document.getElementById('ah-moneda').value;const monto=parseFloat(document.getElementById('ah-monto').value)||0;const meta=parseFloat(document.getElementById('ah-meta').value)||0;const emoji=document.getElementById('ah-emoji').value.trim()||'💰';const tc=moneda==='USD'?(parseFloat(document.getElementById('ah-tc').value)||dolarVenta||1445):null;ahorros=[...ahorros,{id:nextId++,dest,moneda,monto,meta,emoji,tc}];['ah-destino','ah-monto','ah-meta','ah-emoji','ah-tc'].forEach(id=>document.getElementById(id).value='');document.getElementById('ah-cotiz-box').style.display='none';document.getElementById('ah-moneda').value='ARS';renderAhorro();}
+function deleteAhorro(id){ahorros=ahorros.filter(a=>a.id!==id);renderAhorro();}
+function updateAhorroMonto(id,val){ahorros=ahorros.map(a=>a.id===id?{...a,monto:parseFloat(val)||0}:a);renderAhorro();}
+function renderAhorro(){const lista=document.getElementById('ahorro-lista');if(ahorros.length===0){lista.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div style="font-size:40px;margin-bottom:10px">🏦</div><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase">Todavía no hay metas. Creá una abajo.</div></div>`;}else{lista.innerHTML=ahorros.map(a=>{const pct=a.meta>0?Math.min(100,Math.round(a.monto/a.meta*100)):null;const montoFmt=a.moneda==='USD'?`USD ${fmtN(a.monto)}`:`$ ${fmtN(a.monto)}`;const metaFmt=a.meta>0?(a.moneda==='USD'?`USD ${fmtN(a.meta)}`:`$ ${fmtN(a.meta)}`):'Sin meta';return`<div class="ahorro-card"><div class="ahorro-card-header"><span style="font-size:28px">${esc(a.emoji)}</span><button class="btn btn-d" style="font-size:10px;padding:3px 8px" onclick="deleteAhorro(${a.id})">✕</button></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">${esc(a.dest)}</div><div style="font-size:11px;color:var(--muted);margin-bottom:12px">Moneda: <strong>${a.moneda==='USD'?'Dólares':'Pesos'}</strong></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><span style="font-size:11px;color:var(--muted);white-space:nowrap">Guardado:</span><input type="number" value="${a.monto}" oninput="updateAhorroMonto(${a.id},this.value)" style="flex:1;text-align:right;font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:var(--ok);border:none;border-bottom:2px solid var(--border);border-radius:0;background:transparent;padding:2px 4px;"><span style="font-size:12px;color:var(--muted)">${a.moneda}</span></div>${a.moneda==='ARS'&&dolarVenta?`<div style="font-size:11px;color:var(--muted)">≈ USD ${fmtN(a.monto/dolarVenta)}</div>`:''}${a.moneda==='USD'&&a.tc?`<div style="font-size:12px;color:var(--ok);font-weight:500;margin-top:2px">≈ ${fmt(a.monto*a.tc)} <span style="font-size:10px;font-weight:400;color:var(--muted)">(TC $${fmtN(a.tc)})</span></div>`:''}${a.meta>0?`<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px"><span>Meta: ${metaFmt}</span><span style="font-weight:600;color:${pct>=100?'var(--ok)':'var(--accent)'}">${pct}%</span></div><div style="background:var(--bg2);border-radius:20px;height:8px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${pct>=100?'var(--ok)':'var(--warm1)'};border-radius:20px;transition:width .4s"></div></div>${pct>=100?`<div style="font-size:11px;color:var(--ok);margin-top:5px;font-weight:600">✓ ¡Meta alcanzada!</div>`:''}</div>`:''}</div>`;}).join('');}const ars=ahorros.filter(a=>a.moneda==='ARS').reduce((s,a)=>s+a.monto,0);const usd=ahorros.filter(a=>a.moneda==='USD').reduce((s,a)=>s+a.monto,0);const tot=document.getElementById('ahorro-totales');if(ahorros.length>0){tot.innerHTML=`<div class="ahorro-total-bar"><div><div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Total en pesos</div><div class="lb" style="font-size:24px;font-weight:700;color:var(--ok)">$ ${fmtN(ars)}</div>${usd>0&&dolarVenta?`<div style="font-size:11px;color:var(--muted)">+ equiv. ARS de USD: ${fmt(usd*dolarVenta)}</div>`:''}</div>${usd>0?`<div><div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Total en dólares</div><div class="lb" style="font-size:24px;font-weight:700;color:var(--ok)">USD ${fmtN(usd)}</div>${dolarVenta?`<div style="font-size:11px;color:var(--muted)">≈ ${fmt(usd*dolarVenta)} al tipo Galicia</div>`:''}</div>`:''}<div><div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">${ahorros.length} meta${ahorros.length!==1?'s':''}</div><div class="lb" style="font-size:18px;font-weight:700;color:var(--accent)">${ahorros.filter(a=>a.meta>0&&a.monto>=a.meta).length} alcanzada${ahorros.filter(a=>a.meta>0&&a.monto>=a.meta).length!==1?'s':''}</div></div></div>`;}else tot.innerHTML='';}
+// ═══ DEUDA CASA ══════════════════════════════════════════════
+let dcPagos=[];
+let deudaTotal={usd:0,desc:'',enabled:false};
+function renderDcTotalCard(){
+  const el=document.getElementById('dc-total-card');
+  if(!el)return;
+  const totalPagado=dcPagos.reduce((a,p)=>a+p.usd,0);
+  const restante=deudaTotal.enabled?Math.max(0,deudaTotal.usd-totalPagado):null;
+  const pct=deudaTotal.enabled&&deudaTotal.usd>0?Math.min(100,Math.round(totalPagado/deudaTotal.usd*100)):null;
+  const pesosPagado=dolarVenta?totalPagado*dolarVenta:null;
+  const pesosRestante=dolarVenta&&restante!=null?restante*dolarVenta:null;
+
+  el.innerHTML=`<div class="card" style="border-top:4px solid var(--warm1);margin-bottom:0">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:10px;color:var(--warm1);letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:8px">Deuda total de la casa</div>
+        ${deudaTotal.enabled?`
+          <div style="font-family:'Libre Baskerville',serif;font-size:28px;font-weight:700;color:var(--text)">USD ${fmtN(deudaTotal.usd)}</div>
+          ${deudaTotal.desc?`<div style="font-size:12px;color:var(--muted);margin-top:2px">${esc(deudaTotal.desc)}</div>`:''}
+          <div style="margin-top:14px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px">
+              <span>Pagado: <strong style="color:var(--ok)">USD ${fmtN(totalPagado)}</strong>${pesosPagado?` (≈ ${fmt(pesosPagado)})`:''}</span>
+              <span style="font-weight:600;color:${pct>=100?'var(--ok)':'var(--accent)'}">${pct}%</span>
+            </div>
+            <div style="background:var(--bg2);border-radius:20px;height:10px;overflow:hidden">
+              <div style="height:100%;width:${pct}%;background:${pct>=100?'var(--ok)':'var(--warm1)'};border-radius:20px;transition:width .4s"></div>
+            </div>
+            ${pct>=100?'<div style="font-size:11px;color:var(--ok);margin-top:6px;font-weight:600">&#x2713; ¡Deuda saldada!</div>':`
+            <div style="margin-top:8px;display:flex;gap:20px;flex-wrap:wrap">
+              <div><div style="font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase">Restante</div>
+                <div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:var(--danger)">USD ${fmtN(restante)}</div>
+                ${pesosRestante?`<div style="font-size:11px;color:var(--muted)">≈ ${fmt(pesosRestante)}</div>`:''}
+              </div>
+            </div>`}
+          </div>
+        `:`<div style="font-size:12px;color:var(--muted);padding:8px 0">No configurada. Usá el botón de abajo para definir la deuda total.</div>`}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+        <button class="btn btn-p" style="font-size:11px" onclick="openDcTotalModal()">&#9881; ${deudaTotal.enabled?'Editar deuda total':'Configurar deuda total'}</button>
+        ${deudaTotal.enabled?`<button class="btn btn-d" style="font-size:11px" onclick="disableDcTotal()">Quitar configuración</button>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+let dcTotalModalOpen=false;
+function openDcTotalModal(){
+  const bg=document.getElementById('dc-total-modal');
+  document.getElementById('dct-usd').value=deudaTotal.usd||'';
+  document.getElementById('dct-desc').value=deudaTotal.desc||'';
+  bg.classList.add('open');
+}
+function closeDcTotalModal(){document.getElementById('dc-total-modal').classList.remove('open');}
+function saveDcTotal(){
+  const usd=parseFloat(document.getElementById('dct-usd').value)||0;
+  if(usd<=0){alert('Ingresá un monto válido.');return;}
+  deudaTotal={usd,desc:document.getElementById('dct-desc').value.trim(),enabled:true};
+  closeDcTotalModal();
+  renderDcTotalCard();
+  renderDcPagos();renderDcTotalCard();
+}
+function disableDcTotal(){deudaTotal={usd:0,desc:'',enabled:false};renderDcTotalCard();renderDcPagos();}
+
+function addDcPago(){
+  const concepto=document.getElementById('dc-concepto').value.trim();
+  const quien=document.getElementById('dc-quien').value.trim();
+  const usd=parseFloat(document.getElementById('dc-usd').value)||0;
+  const fecha=document.getElementById('dc-fecha').value||new Date().toISOString().slice(0,10);
+  if(!concepto||usd<=0){alert('Completá el concepto y el monto.');return;}
+  dcPagos=[...dcPagos,{id:nextId++,concepto,quien,usd,fecha}];
+  ['dc-concepto','dc-quien','dc-usd'].forEach(id=>document.getElementById(id).value='');
+  renderDcPagos();
+}
+function deleteDcPago(id){dcPagos=dcPagos.filter(p=>p.id!==id);renderDcPagos();renderDcTotalCard();}
+function renderDcPagos(){
+  const empty=document.getElementById('dc-empty');
+  const tbl=document.getElementById('dc-tbl');
+  if(dcPagos.length===0){empty.style.display='block';tbl.style.display='none';return;}
+  empty.style.display='none';tbl.style.display='block';
+  const sorted=[...dcPagos].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  document.getElementById('dc-tbody').innerHTML=sorted.map(p=>{
+    const pesos=dolarVenta?p.usd*dolarVenta:null;
+    const fechaFmt=p.fecha?p.fecha.split('-').reverse().join('/'):'-';
+    return`<tr class="data-row">
+      <td style="color:var(--muted);white-space:nowrap">${fechaFmt}</td>
+      <td>${esc(p.concepto)}</td>
+      <td style="color:var(--muted)">${esc(p.quien||'-')}</td>
+      <td class="r" style="font-weight:600;color:var(--ok)">USD ${fmtN(p.usd)}</td>
+      <td class="r" style="color:var(--muted)">${pesos?fmt(pesos):'-'}</td>
+      <td class="r"><button class="btn btn-d" style="padding:3px 8px" onclick="deleteDcPago(${p.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+  const totalUsd=dcPagos.reduce((a,p)=>a+p.usd,0);
+  const totalPesos=dolarVenta?totalUsd*dolarVenta:null;
+  document.getElementById('dc-tfoot').innerHTML=`<tr>
+    <td colspan="3" style="color:var(--muted);font-size:11px;letter-spacing:.08em">${dcPagos.length} pago${dcPagos.length!==1?'s':''} registrado${dcPagos.length!==1?'s':''}</td>
+    <td class="r" style="font-weight:700;color:var(--ok);font-size:14px">USD ${fmtN(totalUsd)}</td>
+    <td class="r" style="color:var(--muted);font-size:12px">${totalPesos?fmt(totalPesos):'-'}</td>
+    <td></td>
+  </tr>`;
+}
+
+
+// ═══ CARGAR TOTALES POR MES ═══════════════════════════════════
+function openLoadTotalsModal(){
+  document.getElementById('lt-month-label').textContent=`${MONTHS_ES[currentMonth]} ${currentYear}`;
+  const existing=getSummaryReal();
+  const cards=["VISA Kevin (BBVA)","MC Lucia (Galicia)","VISA Lucia (Galicia)","Mercado Pago"];
+  document.getElementById('lt-fields').innerHTML=cards.map(k=>{
+    const m=TARJETA_META[k];const prev=existing[k];
+    const safe=k.replace(/[^a-z0-9]/gi,'_');
+    return`<div style="margin-bottom:14px">
+      <div style="font-size:10px;color:${m.color};letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:6px">${m.label}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+        <div><div class="form-label">Total $</div><input type="number" id="lt-total-${safe}" value="${prev?.total||''}" placeholder="0" style="width:100%;text-align:right"></div>
+        <div><div class="form-label">USD</div><input type="number" id="lt-usd-${safe}" value="${prev?.usd||''}" placeholder="0" style="width:100%;text-align:right"></div>
+        <div><div class="form-label">Pago mínimo $</div><input type="number" id="lt-min-${safe}" value="${prev?.minPago||''}" placeholder="0" style="width:100%;text-align:right"></div>
+      </div></div>`;
+  }).join('');
+  document.getElementById('load-totals-modal').classList.add('open');
+}
+function closeLoadTotalsModal(){document.getElementById('load-totals-modal').classList.remove('open');}
+function saveLoadTotals(){
+  const cards=["VISA Kevin (BBVA)","MC Lucia (Galicia)","VISA Lucia (Galicia)","Mercado Pago"];
+  if(!SUMMARY_REAL_BY_MONTH[mkId()])SUMMARY_REAL_BY_MONTH[mkId()]={};
+  cards.forEach(k=>{
+    const safe=k.replace(/[^a-z0-9]/gi,'_');
+    const total=parseFloat(document.getElementById(`lt-total-${safe}`).value)||0;
+    const usd=parseFloat(document.getElementById(`lt-usd-${safe}`).value)||0;
+    const minPago=parseFloat(document.getElementById(`lt-min-${safe}`).value)||0;
+    if(total>0||usd>0||minPago>0) SUMMARY_REAL_BY_MONTH[mkId()][k]={total,usd,minPago};
+  });
+  closeLoadTotalsModal();renderResumen();
+}
+document.getElementById('load-totals-modal').addEventListener('click',function(e){if(e.target===this)closeLoadTotalsModal();});
+document.getElementById('dc-total-modal').addEventListener('click',function(e){if(e.target===this)closeDcTotalModal();});
+
+// ═══ SYNC — localStorage + JSONBin ══════════════════════════
+const JSONBIN_KEY = '$2a$10$nfLpXSINOEiKLobBA/p0AeUwU/iz875kkXiIUXZkH2DfafpfkSxMO';
+const JSONBIN_BIN_KEY = 'tarjetas_bin_id';
+const LS_KEY = 'tarjetas_state_v1';
+
+const JSONBIN_BIN_ID = '6a2049a5f5f4af5e29b3268f';
+async function getOrCreateBin() {
+  return JSONBIN_BIN_ID;
+}
+
+let _saveTimer = null;
+let _syncStatus = 'idle'; // idle | saving | saved | error | loading
+
+function setSyncStatus(s, msg) {
+  _syncStatus = s;
+  const el = document.getElementById('sync-indicator');
+  if (!el) return;
+  const map = {
+    idle:    { icon:'☁️', text:'', color:'rgba(255,255,255,.5)' },
+    loading: { icon:'⏳', text:'Cargando…', color:'#e8c88a' },
+    saving:  { icon:'⏳', text:'Guardando…', color:'#e8c88a' },
+    saved:   { icon:'✓', text:'Guardado', color:'#a8d8a0' },
+    error:   { icon:'⚠️', text: msg||'Error al guardar', color:'#f2a0a0' },
+  };
+  const m = map[s] || map.idle;
+  el.innerHTML = `<span style="font-size:13px">${m.icon}</span><span style="font-size:11px;color:${m.color}">${m.text}</span>`;
+  if (s === 'saved') setTimeout(() => setSyncStatus('idle'), 3000);
+}
+
+function getFullState() {
+  return {
+    monthsData,
+    deletedData,
+    salarios,
+    extras,
+    dhRows,
+    ahorros,
+    nextId,
+    SUMMARY_REAL_BY_MONTH,
+    dcPagos,
+    deudaTotal,
+  };
+}
+
+function applyFullState(s) {
+  if (s.monthsData)           monthsData = s.monthsData;
+  if (s.deletedData)          deletedData = s.deletedData;
+  if (s.salarios)             salarios = s.salarios;
+  if (s.extras)               extras = s.extras;
+  if (s.dhRows)               dhRows = s.dhRows;
+  if (s.ahorros)              ahorros = s.ahorros;
+  if (s.nextId)               nextId = s.nextId;
+  if (s.SUMMARY_REAL_BY_MONTH) {
+    Object.assign(SUMMARY_REAL_BY_MONTH, s.SUMMARY_REAL_BY_MONTH);
+  }
+  if (s.dcPagos)              dcPagos = s.dcPagos;
+  if (s.deudaTotal)           deudaTotal = s.deudaTotal;
+  // Los Set no se serializan en JSON — siempre resetear como Set vacíos
+  selectedIds   = new Set();
+  opSelectedIds = new Set();
+  opMode        = false;
+}
+
+async function supaLoad() {
+  setSyncStatus('loading');
+  try {
+    const binId = await getOrCreateBin();
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': JSONBIN_KEY, 'X-Access-Key': JSONBIN_KEY }
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    const record = data.record;
+    if (record && Object.keys(record).length > 0 && record.monthsData) {
+      applyFullState(record);
+      try { localStorage.setItem(LS_KEY, JSON.stringify(record)); } catch(e) {}
+      setSyncStatus('saved', '');
+      return;
+    }
+  } catch (e) {
+    console.warn('JSONBin load error:', e);
+  }
+  // Fallback: localStorage
+  try {
+    const local = localStorage.getItem(LS_KEY);
+    if (local) {
+      const data = JSON.parse(local);
+      if (data && Object.keys(data).length > 0) applyFullState(data);
+    }
+  } catch(e) {}
+  setSyncStatus('idle');
+}
+
+async function supaSave() {
+  setSyncStatus('saving');
+  const state = getFullState();
+  // 1. Guardar en localStorage siempre
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e) {}
+  // 2. Guardar en JSONBin para sincronización entre dispositivos
+  try {
+    const binId = await getOrCreateBin();
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_KEY,
+      },
+      body: JSON.stringify(state),
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    setSyncStatus('saved');
+  } catch (e) {
+    setSyncStatus('saved');
+    console.warn('JSONBin save error (localStorage OK):', e);
+  }
+}
+
+// Debounced save — se llama después de cualquier cambio de estado
+function scheduleSave() {
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(supaSave, 1500);
+}
+
+// Parchear todas las funciones que modifican estado
+function _wrapSave(fn) {
+  return function() { const r = fn.apply(this, arguments); scheduleSave(); return r; };
+}
+addGasto       = _wrapSave(addGasto);
+deleteItem     = _wrapSave(deleteItem);
+restoreItem    = _wrapSave(restoreItem);
+togglePaid     = _wrapSave(togglePaid);
+saveEdit       = _wrapSave(saveEdit);
+applyOp        = _wrapSave(applyOp);
+addAhorro      = _wrapSave(addAhorro);
+deleteAhorro   = _wrapSave(deleteAhorro);
+addDcPago      = _wrapSave(addDcPago);
+deleteDcPago   = _wrapSave(deleteDcPago);
+saveDcTotal    = _wrapSave(saveDcTotal);
+disableDcTotal = _wrapSave(disableDcTotal);
+saveLoadTotals = _wrapSave(saveLoadTotals);
+bulkSendDH     = _wrapSave(bulkSendDH);
+confirmDup     = _wrapSave(confirmDup);
+if (typeof addDHRow    !== 'undefined') addDHRow    = _wrapSave(addDHRow);
+if (typeof deleteDHRow !== 'undefined') deleteDHRow = _wrapSave(deleteDHRow);
+if (typeof saveSalario !== 'undefined') saveSalario = _wrapSave(saveSalario);
+if (typeof saveExtras  !== 'undefined') saveExtras  = _wrapSave(saveExtras);
+
+// ═══ OTRA ═════════════════════════════════════════════════════
+let otraGastos = []; // gastos temporales en la solapa Otra
+let otraNextId = 1;
+
+function otraHandleImage(inp) {
+  const f = inp.files[0];
+  if (!f) return;
+  document.getElementById('otra-img-name').textContent = f.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('otra-img-el');
+    img.src = e.target.result;
+    document.getElementById('otra-img-preview').style.display = 'block';
+  };
+  reader.readAsDataURL(f);
+}
+
+function otraAddGasto() {
+  const detalle = document.getElementById('otra-detalle').value.trim();
+  if (!detalle) { alert('Ingresá un detalle.'); return; }
+  const pesos  = parseFloat(document.getElementById('otra-pesos').value) || 0;
+  const usd    = parseFloat(document.getElementById('otra-usd').value)   || 0;
+  const cuota  = document.getElementById('otra-cuota').value || '–';
+  otraGastos.push({ id: otraNextId++, detalle, pesos, usd, cuota, destino: 'VISA Kevin (BBVA)' });
+  ['otra-detalle','otra-pesos','otra-usd','otra-cuota'].forEach(id => document.getElementById(id).value = '');
+  otraRenderLista();
+}
+
+function otraSetDestino(id, val) {
+  otraGastos = otraGastos.map(g => g.id === id ? { ...g, destino: val } : g);
+}
+
+function otraMover(id) {
+  const g = otraGastos.find(x => x.id === id);
+  if (!g) return;
+  const item = {
+    id: nextId++,
+    tarjeta: g.destino,
+    titular: '–',
+    fecha: new Date().toLocaleDateString('es-AR'),
+    detalle: g.detalle,
+    cuota: g.cuota,
+    pesos: g.pesos,
+    usd: g.usd,
+    pagado: false,
+  };
+  setItems([...getItems(), item]);
+  otraGastos = otraGastos.filter(x => x.id !== id);
+  scheduleSave();
+  renderTable();
+  renderResumen();
+  otraRenderLista();
+}
+
+function otraMoverTodos() {
+  const sources = [...Object.keys(TARJETA_META),
+    ...new Set(getItems().map(i => i.tarjeta).filter(t => !TARJETA_META[t]))];
+  const sel = prompt(
+    'Escribí el nombre exacto de la fuente destino para TODOS los gastos:\n\n' +
+    sources.join('\n')
+  );
+  if (!sel) return;
+  otraGastos.forEach(g => {
+    setItems([...getItems(), {
+      id: nextId++, tarjeta: sel, titular: '–',
+      fecha: new Date().toLocaleDateString('es-AR'),
+      detalle: g.detalle, cuota: g.cuota,
+      pesos: g.pesos, usd: g.usd, pagado: false,
+    }]);
+  });
+  otraGastos = [];
+  scheduleSave();
+  renderTable();
+  renderResumen();
+  otraRenderLista();
+}
+
+function otraEliminar(id) {
+  otraGastos = otraGastos.filter(x => x.id !== id);
+  otraRenderLista();
+}
+
+function otraLimpiar() {
+  if (!otraGastos.length) return;
+  if (!confirm('¿Eliminar todos los gastos de la lista? No se moverán a ninguna fuente.')) return;
+  otraGastos = [];
+  otraRenderLista();
+}
+
+function otraRenderLista() {
+  const panel = document.getElementById('otra-panel');
+  if (otraGastos.length === 0) {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = 'block';
+
+  const sources = [...Object.keys(TARJETA_META),
+    ...new Set(getItems().map(i => i.tarjeta).filter(t => !TARJETA_META[t]))];
+
+  document.getElementById('otra-tbody').innerHTML = otraGastos.map(g => {
+    const opts = sources.map(s =>
+      `<option value="${esc(s)}" ${g.destino === s ? 'selected' : ''}>${esc(TARJETA_META[s]?.label || s)}</option>`
+    ).join('') + `<option value="__nueva__">+ Fuente nueva…</option>`;
+    return `<tr class="data-row">
+      <td>${esc(g.detalle)}</td>
+      <td class="r" style="color:var(--muted)">${esc(g.cuota)}</td>
+      <td class="r" style="font-variant-numeric:tabular-nums">${g.pesos !== 0 ? fmt(g.pesos) : '–'}</td>
+      <td class="r" style="color:var(--muted)">${g.usd > 0 ? fmtU(g.usd) : '–'}</td>
+      <td><select style="width:100%;font-size:11px" onchange="otraSetDestino(${g.id},this.value)">${opts}</select></td>
+      <td style="text-align:right;white-space:nowrap">
+        <button class="btn btn-s" style="padding:4px 10px;font-size:11px" onclick="otraMover(${g.id})">Mover →</button>
+        <button class="btn btn-d" style="padding:4px 8px;margin-left:4px" onclick="otraEliminar(${g.id})">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// Manejar opción "+ Fuente nueva…" en el select de destino
+document.addEventListener('change', e => {
+  if (e.target.tagName === 'SELECT' && e.target.closest('#otra-tbody')) {
+    if (e.target.value === '__nueva__') {
+      const nombre = prompt('Nombre de la nueva fuente:');
+      if (nombre && nombre.trim()) {
+        const id = parseInt(e.target.closest('tr').querySelector('button').getAttribute('onclick').match(/\d+/)[0]);
+        otraSetDestino(id, nombre.trim());
+        otraRenderLista();
+      } else {
+        e.target.value = otraGastos.find(g => g.id === parseInt(e.target.closest('tr').querySelector('button').getAttribute('onclick').match(/\d+/)[0]))?.destino || 'VISA Kevin (BBVA)';
+      }
+    }
+  }
+});
+
+// ═══ INIT ════════════════════════════════════════════════════
+(async function init() {
+  updateMonthDisplay();
+  await supaLoad();
+  renderResumen();
+  renderTable();
+  renderAhorro();
+  renderDcPagos && renderDcPagos();
+  renderDcTotalCard && renderDcTotalCard();
+  otraRenderLista();
+})();
+</script></body></html>
